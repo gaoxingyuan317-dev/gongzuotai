@@ -3702,7 +3702,7 @@
       } else {
         let html = `<div class="book-grid">`;
         results.slice().reverse().forEach(note => {
-          const cats = LIB_CATS || [];
+          const cats = LIB_CATEGORIES || [];
           const catInfo = cats.find(c => c.key === (note.category || 'astrology')) || cats[0] || { color: '#2d5bd1', icon: '🔮', name: '占星' };
           const status = note.readStatus || 'unread';
           const statusText = status === 'read' ? '已读完' : status === 'reading' ? '在读' : '未读';
