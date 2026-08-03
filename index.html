@@ -1682,7 +1682,7 @@
                   <span class="diary-save-status" id="diary-save-status"><span class="diary-save-dot"></span>已保存</span>
                 </div>
                 <div style="display:flex; gap:8px;">
-                  <button class="btn btn-secondary" onclick="saveDiaryNow()" style="font-size:12px; padding:7px 14px;">💾 保存</button>
+                  <button class="btn btn-secondary" onclick="saveDiaryAndExit()" style="font-size:12px; padding:7px 14px;">💾 保存</button>
                   <button class="diary-continue-btn" onclick="continueWriting()">✦ 继续创作</button>
                 </div>
               </div>
@@ -1904,6 +1904,17 @@
     }
 
     function flushDiarySave() { saveDiaryNow(); }
+
+    function saveDiaryAndExit() {
+      saveDiaryNow();
+      toast('✅ 已保存，正在同步到云端...');
+      // 0.8秒后跳回日记列表视图
+      setTimeout(function() {
+        state.selectedDiaryId = null;
+        saveState();
+        renderModule();
+      }, 800);
+    }
 
     // ===== 文件永久存储 =====
     let diaryFileHandle = null;
