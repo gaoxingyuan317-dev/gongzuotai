@@ -6,61 +6,11 @@
     "viral",
     "writing",
     "brain",
-    "skills",
-    "library"
+    "library",
+    "skills"
   ],
   "activeModule": "writing",
   "daily": [
-    {
-      "id": "1785734827809uy9vng43bs",
-      "text": "已看书1小时",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "17857348278103pk9otc5lmo",
-      "text": "已刷抖音并记录3条占星爆款",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734827810ufbalq2mn5",
-      "text": "已写1条60秒口播脚本",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734827810rjchy5p9ob",
-      "text": "已发布1条内容",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734827810mk4bpmv1clr",
-      "text": "已复盘昨日数据",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734805018balatw1n0cw",
-      "text": "已看书1小时",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734805019865cmfdhqph",
-      "text": "已刷抖音并记录3条占星爆款",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734805019cpf189mctj5",
-      "text": "已写1条60秒口播脚本",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "1785734805019cci1j0i0htn",
-      "text": "已发布1条内容",
-      "created": "2026-08-03"
-    },
-    {
-      "id": "17857348050190e8g5egjd5h",
-      "text": "已复盘昨日数据",
-      "created": "2026-08-03"
-    },
     {
       "id": "1785166698973iqb4j5i6occ",
       "text": "看书1小时",
@@ -111,28 +61,71 @@
       "id": "1785728773373qwcxclzqbth",
       "text": "已复盘昨日数据",
       "created": "2026-08-03"
+    },
+    {
+      "id": "1785734805018balatw1n0cw",
+      "text": "已看书1小时",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734805019865cmfdhqph",
+      "text": "已刷抖音并记录3条占星爆款",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734805019cpf189mctj5",
+      "text": "已写1条60秒口播脚本",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734805019cci1j0i0htn",
+      "text": "已发布1条内容",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "17857348050190e8g5egjd5h",
+      "text": "已复盘昨日数据",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734827809uy9vng43bs",
+      "text": "已看书1小时",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "17857348278103pk9otc5lmo",
+      "text": "已刷抖音并记录3条占星爆款",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734827810ufbalq2mn5",
+      "text": "已写1条60秒口播脚本",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734827810rjchy5p9ob",
+      "text": "已发布1条内容",
+      "created": "2026-08-03"
+    },
+    {
+      "id": "1785734827810mk4bpmv1clr",
+      "text": "已复盘昨日数据",
+      "created": "2026-08-03"
     }
   ],
-  "daily_chat": [],
+  "daily_chat": [
+    {
+      "role": "user",
+      "text": "你好现在能正确使用了吗",
+      "time": "2026-07-27 23:39"
+    },
+    {
+      "role": "ai",
+      "text": "收到你的指令：「你好现在能正确使用了吗」。\n\n当前工作台是本地版本，我可以帮你：\n1. 在各模块间推送内容\n2. 按模板生成标题/钩子/脚本/结构\n3. 整理上下文供你复制给 TRAE 做深度 AI 处理\n\n请告诉我具体要执行哪一步。",
+      "time": "2026-07-27 23:39"
+    }
+  ],
   "content": [
-    {
-      "id": "1785734827810l9qnh5pxb0j",
-      "text": "选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → 可执行建议。示例：总是吸引控制型关系，可以从投射、阴影、金星/冥王、关系边界切入。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星内容流程",
-      "source": "01_内容挖掘开发/来自Skills的内容流程/jungian-content-workflow.md",
-      "builtinKey": "content-jung-workflow",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019c58xom1l98",
-      "text": "选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → 可执行建议。示例：总是吸引控制型关系，可以从投射、阴影、金星/冥王、关系边界切入。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星内容流程",
-      "source": "01_内容挖掘开发/来自Skills的内容流程/jungian-content-workflow.md",
-      "builtinKey": "content-jung-workflow",
-      "builtIn": true
-    },
     {
       "id": "17852887466537cc6kyxky2q",
       "text": "选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → 可执行建议。示例：总是吸引控制型关系，可以从投射、阴影、金星/冥王、关系边界切入。",
@@ -150,50 +143,53 @@
       "source": "01_内容挖掘开发/来自Skills的内容流程/jungian-content-workflow.md",
       "builtinKey": "content-jung-workflow",
       "builtIn": true
+    },
+    {
+      "id": "1785734805019c58xom1l98",
+      "text": "选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → 可执行建议。示例：总是吸引控制型关系，可以从投射、阴影、金星/冥王、关系边界切入。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星内容流程",
+      "source": "01_内容挖掘开发/来自Skills的内容流程/jungian-content-workflow.md",
+      "builtinKey": "content-jung-workflow",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810l9qnh5pxb0j",
+      "text": "选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → 可执行建议。示例：总是吸引控制型关系，可以从投射、阴影、金星/冥王、关系边界切入。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星内容流程",
+      "source": "01_内容挖掘开发/来自Skills的内容流程/jungian-content-workflow.md",
+      "builtinKey": "content-jung-workflow",
+      "builtIn": true
     }
   ],
-  "content_chat": [],
+  "content_chat": [
+    {
+      "role": "user",
+      "text": "💬 引用内容：选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → ...",
+      "time": "2026-07-29 09:26"
+    },
+    {
+      "role": "ai",
+      "text": "已把这条内容加入对话上下文。你可以继续输入指令，比如：帮我改标题、扩展成脚本、推送到内容开发。",
+      "time": "2026-07-29 09:26"
+    },
+    {
+      "role": "user",
+      "text": "💬 引用内容：选题路径：粉丝痛点 → 荣格概念 → 星盘象征 → 生活场景 → 安全边界 → ...",
+      "time": "2026-07-29 09:49"
+    },
+    {
+      "role": "ai",
+      "text": "已把这条内容加入对话上下文。你可以继续输入指令，比如：帮我改标题、扩展成脚本、推送到内容开发。",
+      "time": "2026-07-29 09:49"
+    }
+  ],
   "editing": [],
   "editing_chat": [],
   "viral": [],
   "viral_chat": [],
   "writing": [
-    {
-      "id": "1785734827810ir5cl3gnxaj",
-      "text": "结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → 温和建议 → 收藏/评论引导。注意不要下诊断，不制造宿命恐惧。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星口播模板",
-      "source": "04_灵感知识库/来自Skills的写作流程/jungian-content-workflow.md",
-      "builtinKey": "writing-jung-template",
-      "builtIn": true
-    },
-    {
-      "id": "17857348748175vxr5hf5puq",
-      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
-      "created": "2026-08-03",
-      "title": "我是一个兵"
-    },
-    {
-      "id": "17857349679801evr816ym0lj",
-      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
-      "created": "2026-08-03",
-      "title": "我是一个兵"
-    },
-    {
-      "id": "17857349681797vqq5aa56l",
-      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
-      "created": "2026-08-03",
-      "title": "我是一个兵"
-    },
-    {
-      "id": "1785734805019rnner14i0eb",
-      "text": "结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → 温和建议 → 收藏/评论引导。注意不要下诊断，不制造宿命恐惧。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星口播模板",
-      "source": "04_灵感知识库/来自Skills的写作流程/jungian-content-workflow.md",
-      "builtinKey": "writing-jung-template",
-      "builtIn": true
-    },
     {
       "id": "1785284188741ri9kgd0vhlq",
       "text": "结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → 温和建议 → 收藏/评论引导。注意不要下诊断，不制造宿命恐惧。",
@@ -241,64 +237,77 @@
       "source": "04_灵感知识库/来自Skills的写作流程/jungian-content-workflow.md",
       "builtinKey": "writing-jung-template",
       "builtIn": true
+    },
+    {
+      "id": "1785734805019rnner14i0eb",
+      "text": "结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → 温和建议 → 收藏/评论引导。注意不要下诊断，不制造宿命恐惧。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星口播模板",
+      "source": "04_灵感知识库/来自Skills的写作流程/jungian-content-workflow.md",
+      "builtinKey": "writing-jung-template",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810ir5cl3gnxaj",
+      "text": "结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → 温和建议 → 收藏/评论引导。注意不要下诊断，不制造宿命恐惧。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星口播模板",
+      "source": "04_灵感知识库/来自Skills的写作流程/jungian-content-workflow.md",
+      "builtinKey": "writing-jung-template",
+      "builtIn": true
+    },
+    {
+      "id": "17857348748175vxr5hf5puq",
+      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
+      "created": "2026-08-03",
+      "title": "我是一个兵"
+    },
+    {
+      "id": "17857349679801evr816ym0lj",
+      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
+      "created": "2026-08-03",
+      "title": "我是一个兵"
+    },
+    {
+      "id": "17857349681797vqq5aa56l",
+      "text": "【2026-08-03 12:56 日记】我是一个兵：哈哈哈哈",
+      "created": "2026-08-03",
+      "title": "我是一个兵"
     }
   ],
-  "writing_chat": [],
+  "writing_chat": [
+    {
+      "role": "user",
+      "text": "💬 引用内容：结构：5秒痛点钩子 → 荣格式心理解释 → 占星象征语言 → 一个自查问题 → ...",
+      "time": "2026-07-29 08:48"
+    },
+    {
+      "role": "ai",
+      "text": "已把这条内容加入对话上下文。你可以继续输入指令，比如：帮我改标题、扩展成脚本、推送到内容开发。",
+      "time": "2026-07-29 08:48"
+    },
+    {
+      "role": "ai",
+      "text": "5秒钩子建议：\n「如果你也总是遇到烂桃花，问题可能不在别人，而在你的金星。」",
+      "time": "2026-07-29 08:48"
+    },
+    {
+      "role": "ai",
+      "text": "60秒脚本框架：\n[0-5s] 痛点钩子\n[5-20s] 占星/心理机制\n[20-45s] 自我识别信号\n[45-55s] 修行建议\n[55-60s] 收藏引导",
+      "time": "2026-07-29 09:32"
+    },
+    {
+      "role": "user",
+      "text": "💬 引用内容：【2026-08-01 日记】做得好的：接受交点结构所揭露的业力模式会在你的人生...",
+      "time": "2026-08-01 11:16"
+    },
+    {
+      "role": "ai",
+      "text": "已把这条内容加入对话上下文。你可以继续输入指令，比如：帮我改标题、扩展成脚本、推送到内容开发。",
+      "time": "2026-08-01 11:16"
+    }
+  ],
   "brain": [
-    {
-      "id": "17857348278109ezxngi118s",
-      "text": "已同步到第二大脑：自我 Ego、个人无意识、集体无意识、情结 Complex、原型 Archetype、人格面具 Persona、阴影 Shadow、投射 Projection、阿尼玛/阿尼姆斯、自性 Self、个体化 Individuation、补偿、共时性。使用时要区分：荣格原典、分析心理学解释、心理占星转化、创作者观点。",
-      "created": "2026-08-03",
-      "title": "荣格心理学核心概念库",
-      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
-      "builtinKey": "jung-core-concepts",
-      "builtIn": true
-    },
-    {
-      "id": "1785734827810kkq4r10kyd",
-      "text": "用于把心理占星内容讲得更稳：星盘不等于心理诊断，行星/宫位/相位可以作为象征语言，引导用户观察投射、阴影、人格面具、关系模式与个体化课题。适合用于金星关系、月亮安全感、土星边界、冥王阴影、十二宫无意识等内容。",
-      "created": "2026-08-03",
-      "title": "荣格心理学与占星连接",
-      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/jungian-astrology-bridge.md",
-      "builtinKey": "jung-astrology-bridge",
-      "builtIn": true
-    },
-    {
-      "id": "1785734827810genc9q2t4u6",
-      "text": "内容输出时不要把前世、业力债务、心理诊断或关系命运当成已证实事实。涉及创伤、抑郁、焦虑、人格障碍、亲密暴力等问题时，只做温和提醒，不替代专业心理咨询、医疗诊断或法律建议。",
-      "created": "2026-08-03",
-      "title": "心理安全边界",
-      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/psychological-safety-boundaries.md",
-      "builtinKey": "psychological-safety-boundaries",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019pdspxjvprps",
-      "text": "已同步到第二大脑：自我 Ego、个人无意识、集体无意识、情结 Complex、原型 Archetype、人格面具 Persona、阴影 Shadow、投射 Projection、阿尼玛/阿尼姆斯、自性 Self、个体化 Individuation、补偿、共时性。使用时要区分：荣格原典、分析心理学解释、心理占星转化、创作者观点。",
-      "created": "2026-08-03",
-      "title": "荣格心理学核心概念库",
-      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
-      "builtinKey": "jung-core-concepts",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019f7bmemp694",
-      "text": "用于把心理占星内容讲得更稳：星盘不等于心理诊断，行星/宫位/相位可以作为象征语言，引导用户观察投射、阴影、人格面具、关系模式与个体化课题。适合用于金星关系、月亮安全感、土星边界、冥王阴影、十二宫无意识等内容。",
-      "created": "2026-08-03",
-      "title": "荣格心理学与占星连接",
-      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/jungian-astrology-bridge.md",
-      "builtinKey": "jung-astrology-bridge",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019k4tq9yu2q6p",
-      "text": "内容输出时不要把前世、业力债务、心理诊断或关系命运当成已证实事实。涉及创伤、抑郁、焦虑、人格障碍、亲密暴力等问题时，只做温和提醒，不替代专业心理咨询、医疗诊断或法律建议。",
-      "created": "2026-08-03",
-      "title": "心理安全边界",
-      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/psychological-safety-boundaries.md",
-      "builtinKey": "psychological-safety-boundaries",
-      "builtIn": true
-    },
     {
       "id": "1785284188740vaesjml9v48",
       "text": "已同步到第二大脑：自我 Ego、个人无意识、集体无意识、情结 Complex、原型 Archetype、人格面具 Persona、阴影 Shadow、投射 Projection、阿尼玛/阿尼姆斯、自性 Self、个体化 Individuation、补偿、共时性。使用时要区分：荣格原典、分析心理学解释、心理占星转化、创作者观点。",
@@ -352,84 +361,66 @@
       "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/psychological-safety-boundaries.md",
       "builtinKey": "psychological-safety-boundaries",
       "builtIn": true
+    },
+    {
+      "id": "1785734805019pdspxjvprps",
+      "text": "已同步到第二大脑：自我 Ego、个人无意识、集体无意识、情结 Complex、原型 Archetype、人格面具 Persona、阴影 Shadow、投射 Projection、阿尼玛/阿尼姆斯、自性 Self、个体化 Individuation、补偿、共时性。使用时要区分：荣格原典、分析心理学解释、心理占星转化、创作者观点。",
+      "created": "2026-08-03",
+      "title": "荣格心理学核心概念库",
+      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
+      "builtinKey": "jung-core-concepts",
+      "builtIn": true
+    },
+    {
+      "id": "1785734805019f7bmemp694",
+      "text": "用于把心理占星内容讲得更稳：星盘不等于心理诊断，行星/宫位/相位可以作为象征语言，引导用户观察投射、阴影、人格面具、关系模式与个体化课题。适合用于金星关系、月亮安全感、土星边界、冥王阴影、十二宫无意识等内容。",
+      "created": "2026-08-03",
+      "title": "荣格心理学与占星连接",
+      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/jungian-astrology-bridge.md",
+      "builtinKey": "jung-astrology-bridge",
+      "builtIn": true
+    },
+    {
+      "id": "1785734805019k4tq9yu2q6p",
+      "text": "内容输出时不要把前世、业力债务、心理诊断或关系命运当成已证实事实。涉及创伤、抑郁、焦虑、人格障碍、亲密暴力等问题时，只做温和提醒，不替代专业心理咨询、医疗诊断或法律建议。",
+      "created": "2026-08-03",
+      "title": "心理安全边界",
+      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/psychological-safety-boundaries.md",
+      "builtinKey": "psychological-safety-boundaries",
+      "builtIn": true
+    },
+    {
+      "id": "17857348278109ezxngi118s",
+      "text": "已同步到第二大脑：自我 Ego、个人无意识、集体无意识、情结 Complex、原型 Archetype、人格面具 Persona、阴影 Shadow、投射 Projection、阿尼玛/阿尼姆斯、自性 Self、个体化 Individuation、补偿、共时性。使用时要区分：荣格原典、分析心理学解释、心理占星转化、创作者观点。",
+      "created": "2026-08-03",
+      "title": "荣格心理学核心概念库",
+      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
+      "builtinKey": "jung-core-concepts",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810kkq4r10kyd",
+      "text": "用于把心理占星内容讲得更稳：星盘不等于心理诊断，行星/宫位/相位可以作为象征语言，引导用户观察投射、阴影、人格面具、关系模式与个体化课题。适合用于金星关系、月亮安全感、土星边界、冥王阴影、十二宫无意识等内容。",
+      "created": "2026-08-03",
+      "title": "荣格心理学与占星连接",
+      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/jungian-astrology-bridge.md",
+      "builtinKey": "jung-astrology-bridge",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810genc9q2t4u6",
+      "text": "内容输出时不要把前世、业力债务、心理诊断或关系命运当成已证实事实。涉及创伤、抑郁、焦虑、人格障碍、亲密暴力等问题时，只做温和提醒，不替代专业心理咨询、医疗诊断或法律建议。",
+      "created": "2026-08-03",
+      "title": "心理安全边界",
+      "source": "05_第二大脑/来自Skills的知识库/karmic-astrology-content/psychological-safety-boundaries.md",
+      "builtinKey": "psychological-safety-boundaries",
+      "builtIn": true
     }
   ],
   "brain_chat": [],
   "skills": [],
   "skills_chat": [],
   "library": [
-    {
-      "id": "1785734827810ow28sgku6u",
-      "text": "资料已复制到图书馆：包含荣格核心概念、原典路线、引用纪律。适合做知识卡、口播理论依据、视频选题资料。重点：没有核实原文前，不要把网络流行语写成荣格原话。",
-      "created": "2026-08-03",
-      "title": "荣格概念与来源",
-      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
-      "builtinKey": "library-jung-concepts",
-      "builtIn": true
-    },
-    {
-      "id": "1785734827810psqbqqvxu2",
-      "text": "资料已复制到图书馆：用于把分析心理学中的原型、阴影、投射、人格面具、自性、个体化等概念，转化为心理占星内容框架。",
-      "created": "2026-08-03",
-      "title": "荣格心理学与占星的连接",
-      "source": "08_图书馆/荣格心理学资料/荣格心理学与占星的连接.md",
-      "builtinKey": "library-jung-astrology",
-      "builtIn": true
-    },
-    {
-      "id": "1785734827810kvag323lkd",
-      "text": "资料已复制到图书馆：用于短视频口播、标题、系列选题和内容结构。可以推送到灵感知识库或内容开发，生成抖音/小红书内容。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星视频内容",
-      "source": "08_图书馆/荣格心理学资料/荣格心理占星视频内容.md",
-      "builtinKey": "library-jung-video-content",
-      "builtIn": true
-    },
-    {
-      "id": "1785734827810oukcfsfy3rc",
-      "text": "用于把 Word、Excel、PDF 转来的图书笔记导入图书馆，再推送到第二大脑、灵感知识库和内容开发模块。",
-      "created": "2026-08-03",
-      "title": "Office 图书导入流程",
-      "source": "08_图书馆/来自Office Skills的图书导入流程.md",
-      "builtinKey": "library-office-import",
-      "builtIn": true
-    },
-    {
-      "id": "178573480501919ua80d8n8d",
-      "text": "资料已复制到图书馆：包含荣格核心概念、原典路线、引用纪律。适合做知识卡、口播理论依据、视频选题资料。重点：没有核实原文前，不要把网络流行语写成荣格原话。",
-      "created": "2026-08-03",
-      "title": "荣格概念与来源",
-      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
-      "builtinKey": "library-jung-concepts",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019hs7h5p2bbss",
-      "text": "资料已复制到图书馆：用于把分析心理学中的原型、阴影、投射、人格面具、自性、个体化等概念，转化为心理占星内容框架。",
-      "created": "2026-08-03",
-      "title": "荣格心理学与占星的连接",
-      "source": "08_图书馆/荣格心理学资料/荣格心理学与占星的连接.md",
-      "builtinKey": "library-jung-astrology",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019e2p64wd3ya7",
-      "text": "资料已复制到图书馆：用于短视频口播、标题、系列选题和内容结构。可以推送到灵感知识库或内容开发，生成抖音/小红书内容。",
-      "created": "2026-08-03",
-      "title": "荣格心理占星视频内容",
-      "source": "08_图书馆/荣格心理学资料/荣格心理占星视频内容.md",
-      "builtinKey": "library-jung-video-content",
-      "builtIn": true
-    },
-    {
-      "id": "1785734805019dfrxv6cwqnw",
-      "text": "用于把 Word、Excel、PDF 转来的图书笔记导入图书馆，再推送到第二大脑、灵感知识库和内容开发模块。",
-      "created": "2026-08-03",
-      "title": "Office 图书导入流程",
-      "source": "08_图书馆/来自Office Skills的图书导入流程.md",
-      "builtinKey": "library-office-import",
-      "builtIn": true
-    },
     {
       "id": "17857149336035hl2nnnni4n",
       "text": "资料已复制到图书馆：包含荣格核心概念、原典路线、引用纪律。适合做知识卡、口播理论依据、视频选题资料。重点：没有核实原文前，不要把网络流行语写成荣格原话。",
@@ -501,9 +492,82 @@
       "source": "08_图书馆/来自Office Skills的图书导入流程.md",
       "builtinKey": "library-office-import",
       "builtIn": true
+    },
+    {
+      "id": "178573480501919ua80d8n8d",
+      "text": "资料已复制到图书馆：包含荣格核心概念、原典路线、引用纪律。适合做知识卡、口播理论依据、视频选题资料。重点：没有核实原文前，不要把网络流行语写成荣格原话。",
+      "created": "2026-08-03",
+      "title": "荣格概念与来源",
+      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
+      "builtinKey": "library-jung-concepts",
+      "builtIn": true
+    },
+    {
+      "id": "1785734805019hs7h5p2bbss",
+      "text": "资料已复制到图书馆：用于把分析心理学中的原型、阴影、投射、人格面具、自性、个体化等概念，转化为心理占星内容框架。",
+      "created": "2026-08-03",
+      "title": "荣格心理学与占星的连接",
+      "source": "08_图书馆/荣格心理学资料/荣格心理学与占星的连接.md",
+      "builtinKey": "library-jung-astrology",
+      "builtIn": true
+    },
+    {
+      "id": "1785734805019e2p64wd3ya7",
+      "text": "资料已复制到图书馆：用于短视频口播、标题、系列选题和内容结构。可以推送到灵感知识库或内容开发，生成抖音/小红书内容。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星视频内容",
+      "source": "08_图书馆/荣格心理学资料/荣格心理占星视频内容.md",
+      "builtinKey": "library-jung-video-content",
+      "builtIn": true
+    },
+    {
+      "id": "1785734805019dfrxv6cwqnw",
+      "text": "用于把 Word、Excel、PDF 转来的图书笔记导入图书馆，再推送到第二大脑、灵感知识库和内容开发模块。",
+      "created": "2026-08-03",
+      "title": "Office 图书导入流程",
+      "source": "08_图书馆/来自Office Skills的图书导入流程.md",
+      "builtinKey": "library-office-import",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810ow28sgku6u",
+      "text": "资料已复制到图书馆：包含荣格核心概念、原典路线、引用纪律。适合做知识卡、口播理论依据、视频选题资料。重点：没有核实原文前，不要把网络流行语写成荣格原话。",
+      "created": "2026-08-03",
+      "title": "荣格概念与来源",
+      "source": "08_图书馆/荣格心理学资料/荣格概念与来源.md",
+      "builtinKey": "library-jung-concepts",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810psqbqqvxu2",
+      "text": "资料已复制到图书馆：用于把分析心理学中的原型、阴影、投射、人格面具、自性、个体化等概念，转化为心理占星内容框架。",
+      "created": "2026-08-03",
+      "title": "荣格心理学与占星的连接",
+      "source": "08_图书馆/荣格心理学资料/荣格心理学与占星的连接.md",
+      "builtinKey": "library-jung-astrology",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810kvag323lkd",
+      "text": "资料已复制到图书馆：用于短视频口播、标题、系列选题和内容结构。可以推送到灵感知识库或内容开发，生成抖音/小红书内容。",
+      "created": "2026-08-03",
+      "title": "荣格心理占星视频内容",
+      "source": "08_图书馆/荣格心理学资料/荣格心理占星视频内容.md",
+      "builtinKey": "library-jung-video-content",
+      "builtIn": true
+    },
+    {
+      "id": "1785734827810oukcfsfy3rc",
+      "text": "用于把 Word、Excel、PDF 转来的图书笔记导入图书馆，再推送到第二大脑、灵感知识库和内容开发模块。",
+      "created": "2026-08-03",
+      "title": "Office 图书导入流程",
+      "source": "08_图书馆/来自Office Skills的图书导入流程.md",
+      "builtinKey": "library-office-import",
+      "builtIn": true
     }
   ],
   "library_chat": [],
+  "dataVersion": "2026-08-03-questions",
   "diaries": [
     {
       "id": "1785733037633xymqn378ntf",
@@ -516,15 +580,8 @@
       "id": "1785733006921k8enhhjsk3b",
       "date": "2026-08-03",
       "time": "12:56",
-      "title": "第二个厕",
-      "content": "呼吁 "
-    },
-    {
-      "id": "1785738070111kkorhrspu5",
-      "date": "2026-08-03",
-      "time": "14:21",
-      "title": "最新测试",
-      "content": "你好你好"
+      "title": "",
+      "content": ""
     },
     {
       "id": "1785736702925ho61pzuuefi",
@@ -532,10 +589,18 @@
       "time": "13:58",
       "title": "你好你好",
       "content": "哈哈哈哈"
+    },
+    {
+      "id": "1785738070111kkorhrspu5",
+      "date": "2026-08-03",
+      "time": "14:21",
+      "title": "最新测试",
+      "content": "你好你好"
     }
   ],
   "selectedDiaryId": "1785733006921k8enhhjsk3b",
   "diary_chat": [],
+  "fileSyncConnected": false,
   "bookNotes": [
     {
       "id": "1785714184323nu4z91wh77p",
@@ -617,8 +682,6 @@
       "created": "2026-08-03 09:20"
     }
   ],
-  "fileSyncConnected": false,
   "crucible": [],
-  "questions": [],
-  "dataVersion": "2026-08-03-questions"
+  "questions": []
 }
