@@ -398,9 +398,9 @@
         flex-direction: row; align-items: center;
       }
       .header h2 { font-size: 18px; }
-      .header-actions { gap: 4px; }
-      .header-actions .btn { padding: 5px 8px; font-size: 10px; }
-      .header-actions .btn:nth-child(n+4) { display: none; }
+      .header-actions { gap: 4px; overflow-x: auto; flex-wrap: nowrap; }
+      .header-actions .btn { padding: 5px 8px; font-size: 10px; white-space: nowrap; flex-shrink: 0; }
+      .header-actions .btn:nth-child(n+4) { display: inline-block; }
       .content { padding: 14px 12px 20px 12px; }
       .module-brief-title { font-size: 15px; }
       .card { padding: 12px 13px; border-radius: 10px; }
@@ -1034,11 +1034,11 @@
           <button class="btn btn-secondary" onclick="switchModule('daily')">任务计划</button>
           <button class="btn btn-secondary" onclick="switchModule('writing')">灵感知识库</button>
           <button class="btn btn-secondary" onclick="switchModule('library')">选择合集</button>
+          <button class="btn btn-secondary" onclick="openGithubSyncPanel()" id="github-sync-btn" style="background:#2d5bd1;color:#fff;">☁️云同步</button>
+          <button class="btn btn-secondary" onclick="switchModule('content')">搜索</button>
           <button class="btn btn-secondary" onclick="smartClassify()">+ 新增</button>
-          <button class="btn btn-secondary" onclick="switchModule('content')">全局搜索</button>
-          <button class="btn btn-secondary" onclick="openGithubSyncPanel()" id="github-sync-btn" style="background:#2d5bd1;color:#fff;">☁️ 云同步</button>
-          <button class="btn btn-secondary" onclick="exportData()" style="background:#28a745;color:#fff;">📦 导出备份</button>
-          <button class="btn btn-secondary" onclick="importData()" style="background:#17a2b8;color:#fff;">📂 导入备份</button>
+          <button class="btn btn-secondary" onclick="exportData()" style="background:#28a745;color:#fff;">📦 导出</button>
+          <button class="btn btn-secondary" onclick="importData()" style="background:#17a2b8;color:#fff;">📂 导入</button>
         </div>
       </header>
       <div class="content" id="content-area"></div>
