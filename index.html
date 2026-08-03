@@ -3200,14 +3200,18 @@
             <button class="lib-home-nav-btn ${libHomeTab==='questions'?'active':''}" onclick="libSwitchHomeTab('questions')">❓ 问题库<span class="nav-count">${questionCount}</span></button>
           </div>`;
 
-          // 微信读书 Skill 安装栏（首页醒目位置）
-          html += `<div style="background:linear-gradient(135deg,#1aad19,#07c160);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <span style="font-size:28px;">📗</span>
-            <div style="flex:1;min-width:180px;">
-              <div style="font-size:15px;font-weight:800;color:#fff;">微信读书 Skill 一键安装</div>
-              <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:2px;">安装后可自动同步微信读书标注到图书馆，支持批量导入笔记</div>
+          // 微信读书 Skill 状态栏（已安装）
+          html += `<div style="background:linear-gradient(135deg,#1aad19,#07c160);border-radius:12px;padding:14px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              <span style="font-size:28px;">📗</span>
+              <div style="flex:1;min-width:180px;">
+                <div style="font-size:15px;font-weight:800;color:#fff;">微信读书 Skill <span style="background:#fff;color:#07c160;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:4px;">已安装</span></div>
+                <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:2px;">直接在对话窗口输入指令使用，例如"帮我搜书""导出我的划线""看看我的书架"</div>
+              </div>
             </div>
-            <button onclick="copyWeReadSkillCmd()" style="padding:8px 18px;background:#fff;color:#07c160;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);">📋 复制安装命令</button>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.2);font-size:11px;color:rgba(255,255,255,.9);">
+              <strong>使用前需配置 API Key：</strong>前往 <a href="https://weread.qq.com/r/weread-skills" target="_blank" style="color:#fff;text-decoration:underline;">微信读书 Skill 页面</a> 获取 Key，然后告诉我"设置微信读书API Key: wrk-xxxx"即可
+            </div>
           </div>`;
 
           if (libHomeTab === 'categories') {
