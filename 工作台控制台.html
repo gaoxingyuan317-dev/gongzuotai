@@ -1277,6 +1277,7 @@
             if (!parsed[key + "_chat"]) parsed[key + "_chat"] = [];
           });
           if (!parsed.diaries) parsed.diaries = [];
+          if (!parsed.deletedIds) parsed.deletedIds = [];
           if (!parsed.selectedDiaryId) parsed.selectedDiaryId = null;
           if (!parsed.diary_chat) parsed.diary_chat = [];
           if (!parsed.bookNotes) parsed.bookNotes = [];
@@ -1294,6 +1295,7 @@
         fresh[key + "_chat"] = [];
       });
       fresh.diaries = [];
+      fresh.deletedIds = [];
       fresh.selectedDiaryId = null;
       fresh.diary_chat = [];
       fresh.bookNotes = [];
@@ -1346,7 +1348,7 @@
         const localIds = new Set((state.diaries || []).map(d => d.id));
         let added = 0;
         data.diaries.forEach(fd => {
-          if (fd.id && !localIds.has(fd.id)) {
+          if (fd.id && !localIds.has(fd.id) && !isDeletedId(fd.id)) {
             state.diaries = state.diaries || [];
             state.diaries.push(fd);
             added++;
@@ -1420,7 +1422,7 @@
                 var localIds = new Set((state.diaries || []).map(function(x) { return x.id; }));
                 var added = 0;
                 d.diaries.forEach(function(fd) {
-                  if (fd.id && !localIds.has(fd.id)) { state.diaries = state.diaries || []; state.diaries.push(fd); added++; }
+                  if (fd.id && !localIds.has(fd.id) && !isDeletedId(fd.id)) { state.diaries = state.diaries || []; state.diaries.push(fd); added++; }
                 });
                 if (added > 0) {
                   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1450,7 +1452,7 @@
         const localIds = new Set((state.diaries || []).map(d => d.id));
         let added = 0;
         data.diaries.forEach(fd => {
-          if (fd.id && fd.id.startsWith("feishu_") && !localIds.has(fd.id)) {
+          if (fd.id && fd.id.startsWith("feishu_") && !localIds.has(fd.id) && !isDeletedId(fd.id)) {
             state.diaries = state.diaries || [];
             state.diaries.push(fd);
             added++;
@@ -1883,9 +1885,16 @@
       toast("已记录");
     }
 
+    function isDeletedId(id) {
+      return state.deletedIds && state.deletedIds.indexOf(id) !== -1;
+    }
+
     function deleteDiary(id) {
       state.diaries = state.diaries.filter(d => d.id !== id);
       if (state.selectedDiaryId === id) state.selectedDiaryId = null;
+      // 记录已删除的ID，防止同步时被重新加回来
+      if (!state.deletedIds) state.deletedIds = [];
+      if (state.deletedIds.indexOf(id) === -1) state.deletedIds.push(id);
       saveState();
       idbBackupDiaries();
       renderModule();
@@ -5610,7 +5619,7 @@ ${bodyHtml}
               if (cloudData[key] && Array.isArray(cloudData[key])) {
                 var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
                 cloudData[key].forEach(function(item) {
-                  if (item.id && !localIds.has(item.id)) {
+                  if (item.id && !localIds.has(item.id) && !isDeletedId(item.id)) {
                     state[key] = state[key] || [];
                     state[key].push(item);
                     cloudAdded++;
@@ -5705,7 +5714,7 @@ ${bodyHtml}
             if (data[key] && Array.isArray(data[key])) {
               var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
               data[key].forEach(function(item) {
-                if (item.id && !localIds.has(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
+                if (item.id && !localIds.has(item.id) && !isDeletedId(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
               });
             }
           });
@@ -5764,7 +5773,7 @@ ${bodyHtml}
           if (data[key] && Array.isArray(data[key])) {
             var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
             data[key].forEach(function(item) {
-              if (item.id && !localIds.has(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
+              if (item.id && !localIds.has(item.id) && !isDeletedId(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
             });
           }
         });
