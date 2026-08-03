@@ -5922,6 +5922,24 @@ ${bodyHtml}
     // 从飞书同步日记（只拉取飞书记录，不覆盖本地数据）
     setTimeout(loadFeishuDiaries, 2000);
   </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});}).catch(function(){});}</script></body>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});}).catch(function(){});}</script>
+<script>
+// 版本检测：如果本地存储的版本号与当前不一致，强制刷新一次
+(function(){
+  var CURRENT_VERSION = '20260803_longpress_v2';
+  try {
+    var saved = localStorage.getItem('_page_version');
+    if (saved && saved !== CURRENT_VERSION) {
+      localStorage.setItem('_page_version', CURRENT_VERSION);
+      if (caches) {
+        caches.keys().then(function(keys){ keys.forEach(function(k){ caches.delete(k); }); });
+      }
+      window.location.reload(true);
+      return;
+    }
+    localStorage.setItem('_page_version', CURRENT_VERSION);
+  } catch(e){}
+})();
+</script></body>
 </html>
 
