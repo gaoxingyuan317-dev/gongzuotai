@@ -1037,6 +1037,8 @@
           <button class="btn btn-secondary" onclick="smartClassify()">+ 新增</button>
           <button class="btn btn-secondary" onclick="switchModule('content')">全局搜索</button>
           <button class="btn btn-secondary" onclick="openGithubSyncPanel()" id="github-sync-btn" style="background:#2d5bd1;color:#fff;">☁️ 云同步</button>
+          <button class="btn btn-secondary" onclick="exportData()" style="background:#28a745;color:#fff;">📦 导出备份</button>
+          <button class="btn btn-secondary" onclick="importData()" style="background:#17a2b8;color:#fff;">📂 导入备份</button>
         </div>
       </header>
       <div class="content" id="content-area"></div>
@@ -1241,6 +1243,7 @@
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       renderNav();
+      idbBackupDiaries();
       githubAutoSync();
     }
 
@@ -1270,7 +1273,7 @@
       } catch(e) { console.log('日记文件恢复跳过:', e.message); }
     }
 
-    // ===== IndexedDB 日记备份（比 localStorage 更持久，自动触发） =====
+    // ===== IndexedDB 全量备份（比 localStorage 更持久，自动触发） =====
     function idbBackupDiaries() {
       try {
         var req = indexedDB.open('astro_workbench_db', 1);
@@ -1283,13 +1286,10 @@
           if (!db.objectStoreNames.contains('diaries')) return;
           var tx = db.transaction('diaries', 'readwrite');
           var store = tx.objectStore('diaries');
-          store.put({
-            key: 'diary_backup',
-            diaries: state.diaries || [],
-            selectedDiaryId: state.selectedDiaryId,
-            diary_chat: state.diary_chat || [],
-            savedAt: new Date().toISOString()
-          });
+          // 全量备份（所有模块数据）
+          store.put({ key: 'full_state_backup', state: state, savedAt: new Date().toISOString() });
+          // 兼容旧版日记备份
+          store.put({ key: 'diary_backup', diaries: state.diaries || [], selectedDiaryId: state.selectedDiaryId, diary_chat: state.diary_chat || [], savedAt: new Date().toISOString() });
         };
         req.onerror = function() {};
       } catch(e) {}
@@ -1308,26 +1308,41 @@
             if (!db.objectStoreNames.contains('diaries')) { resolve(0); return; }
             var tx = db.transaction('diaries', 'readonly');
             var store = tx.objectStore('diaries');
-            var getReq = store.get('diary_backup');
+            // 优先尝试全量备份恢复
+            var getReq = store.get('full_state_backup');
             getReq.onsuccess = function(ev) {
               var data = ev.target.result;
-              if (!data || !data.diaries || data.diaries.length === 0) { resolve(0); return; }
-              var localIds = new Set((state.diaries || []).map(function(d) { return d.id; }));
-              var added = 0;
-              data.diaries.forEach(function(fd) {
-                if (fd.id && !localIds.has(fd.id)) {
-                  state.diaries = state.diaries || [];
-                  state.diaries.push(fd);
-                  added++;
+              if (data && data.state) {
+                var raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) {
+                  state = mergeBuiltInKnowledge(data.state);
+                  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                  renderNav();
+                  switchModule(state.activeModule || 'daily');
+                  console.log('从 IndexedDB 全量备份恢复了数据');
+                  resolve(1);
+                  return;
                 }
-              });
-              if (added > 0) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-                renderNav();
-                if (activeModule === 'writing') renderModule();
-                console.log('从 IndexedDB 恢复了 ' + added + ' 条日记');
               }
-              resolve(added);
+              // 回退到旧版日记恢复
+              var getReq2 = store.get('diary_backup');
+              getReq2.onsuccess = function(ev2) {
+                var d = ev2.target.result;
+                if (!d || !d.diaries || d.diaries.length === 0) { resolve(0); return; }
+                var localIds = new Set((state.diaries || []).map(function(x) { return x.id; }));
+                var added = 0;
+                d.diaries.forEach(function(fd) {
+                  if (fd.id && !localIds.has(fd.id)) { state.diaries = state.diaries || []; state.diaries.push(fd); added++; }
+                });
+                if (added > 0) {
+                  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                  renderNav();
+                  if (activeModule === 'writing') renderModule();
+                  console.log('从 IndexedDB 恢复了 ' + added + ' 条日记');
+                }
+                resolve(added);
+              };
+              getReq2.onerror = function() { resolve(0); };
             };
             getReq.onerror = function() { resolve(0); };
           };
@@ -3144,7 +3159,9 @@
         html += `
           <div class="lib-search-bar">
             <span class="lib-search-icon">🔍</span>
-            <input type="text" id="lib-search-input" placeholder="搜书名/作者，或输入「帮我把《xxx》放进书架」" oninput="libSearchBooks(this.value)">
+            <input type="text" id="lib-search-input" placeholder="搜书名/作者，输入后按回车搜索" value="${escapeHtml(libSearchQuery || '')}" onkeydown="if(event.key==='Enter'){libSearchBooks(this.value);}" style="flex:1;border:none;outline:none;background:transparent;font-size:14px;color:var(--ink);">
+            <button onclick="libSearchBooks(document.getElementById('lib-search-input').value)" style="padding:4px 12px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">搜索</button>
+            ${libSearchQuery ? '<button onclick="libSearchBooks(\'\')" style="padding:4px 10px;background:var(--rule);color:var(--ink);border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">清除</button>' : ''}
           </div>
         `;
 
@@ -3153,9 +3170,8 @@
           html += renderLibAddForm(cats);
         }
 
-        // 搜索结果
+        // 搜索结果 / 首页内容（二选一）
         const searchQuery = typeof libSearchQuery !== 'undefined' ? libSearchQuery : '';
-        html += `<div id="lib-search-results">`;
         if (searchQuery && searchQuery.trim()) {
           const q = searchQuery.trim().toLowerCase();
           const results = bookNotes.filter(b =>
@@ -3163,7 +3179,7 @@
             (b.author || '').toLowerCase().includes(q) ||
             (b.note || '').toLowerCase().includes(q)
           );
-          html += `<div class="lib-section-title">搜索结果（${results.length}本）</div>`;
+          html += `<div class="lib-section-title" style="display:flex;align-items:center;justify-content:space-between;">搜索结果（${results.length}本）<button onclick="libSearchBooks('')" style="padding:4px 12px;background:var(--rule);color:var(--ink);border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">← 返回首页</button></div>`;
           if (results.length > 0) {
             html += `<div class="book-grid">`;
             results.slice().reverse().forEach(note => {
@@ -3187,9 +3203,7 @@
           } else {
             html += `<div class="empty">未找到匹配的书籍。</div>`;
           }
-        }
-        html += `</div>`;
-
+        } else {
           // === 主页大类目导航栏 ===
           const totalBooks = bookNotes.length;
           const totalReco = RECO_BOOK_DB.length;
@@ -3682,46 +3696,8 @@
     }
 
     function libSearchBooks(val) {
-      libSearchQuery = val;
-      // 只更新搜索结果区域，不重新渲染整个模块，避免输入框失去焦点
-      const resultEl = document.getElementById('lib-search-results');
-      if (!resultEl) return;
-      if (!val || !val.trim()) {
-        resultEl.innerHTML = '';
-        return;
-      }
-      const q = val.trim().toLowerCase();
-      const bookNotes = state.bookNotes || [];
-      const results = bookNotes.filter(b =>
-        (b.title || '').toLowerCase().includes(q) ||
-        (b.author || '').toLowerCase().includes(q) ||
-        (b.note || '').toLowerCase().includes(q)
-      );
-      if (results.length === 0) {
-        resultEl.innerHTML = `<div class="empty">未找到匹配的书籍。</div>`;
-      } else {
-        let html = `<div class="book-grid">`;
-        results.slice().reverse().forEach(note => {
-          const cats = LIB_CATEGORIES || [];
-          const catInfo = cats.find(c => c.key === (note.category || 'astrology')) || cats[0] || { color: '#2d5bd1', icon: '🔮', name: '占星' };
-          const status = note.readStatus || 'unread';
-          const statusText = status === 'read' ? '已读完' : status === 'reading' ? '在读' : '未读';
-          html += `
-            <div class="book-cover-card" onclick="openBookDetail('${note.id}')">
-              <div class="book-cover-img" style="background: linear-gradient(135deg, ${catInfo.color}, ${catInfo.color}88);">
-                <span style="font-size:36px;opacity:.5;">${catInfo.icon}</span>
-                <span class="book-cover-status ${status}">${statusText}</span>
-              </div>
-              <div class="book-cover-info">
-                <div class="book-cover-title">${escapeHtml(note.title || '未命名')}</div>
-                <div class="book-cover-meta">${note.author ? `<span>${escapeHtml(note.author)}</span>` : ''}</div>
-              </div>
-            </div>
-          `;
-        });
-        html += `</div>`;
-        resultEl.innerHTML = html;
-      }
+      libSearchQuery = val || '';
+      renderModule();
     }
 
     function renderLibAddForm(cats) {
@@ -5344,8 +5320,9 @@ ${bodyHtml}
       githubSyncing = false;
     }
 
-    async function githubPullNow() {
+    async function githubPullNow(mode) {
       if (!githubSyncConfig) { toast('请先配置 GitHub 同步'); return; }
+      if (!mode) { showGithubPullDialog(); return; }
       const { username, repo, branch } = githubSyncConfig;
       const statusEl = document.getElementById('gh-sync-status');
       if (statusEl) statusEl.textContent = '⏳ 正在从 GitHub 拉取...';
@@ -5353,34 +5330,58 @@ ${bodyHtml}
         const resp = await fetch(`https://raw.githubusercontent.com/${username}/${repo}/${branch}/workbench_data.json`, { cache: 'no-store' });
         if (!resp.ok) { toast('拉取失败：仓库中还没有数据文件'); return; }
         const data = await resp.json();
-        if (!data.diaries || data.diaries.length === 0) { toast('云端暂无日记数据'); return; }
-        const localIds = new Set((state.diaries || []).map(d => d.id));
-        let added = 0;
-        data.diaries.forEach(fd => {
-          if (fd.id && !localIds.has(fd.id)) {
-            state.diaries = state.diaries || [];
-            state.diaries.push(fd);
-            added++;
+        if (mode === 'replace') {
+          state = mergeBuiltInKnowledge(data);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          renderNav();
+          switchModule(state.activeModule || 'daily');
+          if (statusEl) statusEl.textContent = '✅ 已用云端数据完全替换';
+          toast('已从云端完全恢复所有数据');
+        } else {
+          var mergeArrays = ['diaries','bookNotes','crucible','questions','daily','content','editing','viral','writing','brain','skills','library'];
+          var totalAdded = 0;
+          mergeArrays.forEach(function(key) {
+            if (data[key] && Array.isArray(data[key])) {
+              var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
+              data[key].forEach(function(item) {
+                if (item.id && !localIds.has(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
+              });
+            }
+          });
+          if (data.diary_chat && Array.isArray(data.diary_chat)) {
+            data.diary_chat.forEach(function(item) { (state.diary_chat = state.diary_chat || []).push(item); });
           }
-        });
-        if (data.crucible && data.crucible.length > 0 && (!state.crucible || state.crucible.length === 0)) {
-          state.crucible = data.crucible;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          renderNav();
+          if (activeModule === 'writing') renderModule();
+          if (statusEl) statusEl.textContent = '✅ 合并完成，补充了 ' + totalAdded + ' 条新数据';
+          toast('从云端合并了 ' + totalAdded + ' 条新数据');
         }
-        if (data.questions && data.questions.length > 0 && (!state.questions || state.questions.length === 0)) {
-          state.questions = data.questions;
-        }
-        if (data.bookNotes && data.bookNotes.length > 0 && (!state.bookNotes || state.bookNotes.length === 0)) {
-          state.bookNotes = data.bookNotes;
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        renderNav();
-        if (activeModule === 'writing') renderModule();
-        if (statusEl) statusEl.textContent = '✅ 拉取成功，恢复了 ' + added + ' 条记录';
-        toast('从 GitHub 恢复了 ' + added + ' 条新记录');
       } catch(e) {
         if (statusEl) statusEl.textContent = '❌ 拉取失败';
         toast('拉取失败：' + e.message);
       }
+    }
+
+    function showGithubPullDialog() {
+      var existing = document.getElementById('github-pull-overlay');
+      if (existing) existing.remove();
+      var overlay = document.createElement('div');
+      overlay.id = 'github-pull-overlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:28px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+          <h3 style="margin:0 0 12px;font-size:18px;color:#2d5bd1;">⬇️ 从云端拉取数据</h3>
+          <p style="font-size:13px;color:#666;margin-bottom:16px;">选择拉取方式：</p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="githubPullNow('merge');document.getElementById('github-pull-overlay').remove()" style="padding:12px 16px;background:#28a745;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;text-align:left;">🔗 合并拉取（推荐）<br><span style="font-size:11px;font-weight:400;">只补充本地没有的数据，不删除现有内容</span></button>
+            <button onclick="githubPullNow('replace');document.getElementById('github-pull-overlay').remove()" style="padding:12px 16px;background:#dc3545;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;text-align:left;">⚠️ 完全替换<br><span style="font-size:11px;font-weight:400;">用云端数据覆盖本地，适合换设备恢复</span></button>
+            <button onclick="document.getElementById('github-pull-overlay').remove()" style="padding:10px 16px;background:#6c757d;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">取消</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
     }
 
     function githubAutoSync() {
@@ -5396,21 +5397,21 @@ ${bodyHtml}
         const resp = await fetch(`https://raw.githubusercontent.com/${username}/${repo}/${branch}/workbench_data.json`, { cache: 'no-store' });
         if (!resp.ok) return;
         const data = await resp.json();
-        if (!data.diaries || data.diaries.length === 0) return;
-        const localIds = new Set((state.diaries || []).map(d => d.id));
-        let added = 0;
-        data.diaries.forEach(fd => {
-          if (fd.id && !localIds.has(fd.id)) {
-            state.diaries = state.diaries || [];
-            state.diaries.push(fd);
-            added++;
+        var mergeArrays = ['diaries','bookNotes','crucible','questions','daily','content','editing','viral','writing','brain','skills','library'];
+        var totalAdded = 0;
+        mergeArrays.forEach(function(key) {
+          if (data[key] && Array.isArray(data[key])) {
+            var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
+            data[key].forEach(function(item) {
+              if (item.id && !localIds.has(item.id)) { state[key] = state[key] || []; state[key].push(item); totalAdded++; }
+            });
           }
         });
-        if (added > 0) {
+        if (totalAdded > 0) {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
           renderNav();
           if (activeModule === 'writing') renderModule();
-          console.log('从 GitHub 自动恢复了 ' + added + ' 条记录');
+          console.log('从 GitHub 自动恢复了 ' + totalAdded + ' 条新数据');
         }
       } catch(e) {}
     }
@@ -5418,32 +5419,115 @@ ${bodyHtml}
     loadGithubConfig();
 
     function exportData() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], {type: "application/json"});
+      const exportPayload = {
+        _meta: {
+          exportTime: new Date().toISOString(),
+          version: WORKBENCH_DATA_VERSION,
+          dataCounts: {
+            daily: (state.daily || []).length, content: (state.content || []).length,
+            editing: (state.editing || []).length, viral: (state.viral || []).length,
+            writing: (state.writing || []).length, brain: (state.brain || []).length,
+            skills: (state.skills || []).length, library: (state.library || []).length,
+            diaries: (state.diaries || []).length, bookNotes: (state.bookNotes || []).length,
+            crucible: (state.crucible || []).length, questions: (state.questions || []).length
+          }
+        },
+        state: state
+      };
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {type: "application/json"});
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `占星工作台备份_${todayStr()}.json`;
+      a.download = `占星工作台完整备份_${todayStr()}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast("备份已导出");
+      toast("完整备份已导出到设备");
     }
 
     function importData() { document.getElementById("importFile").click(); }
 
+    let _pendingImportData = null;
+
     function handleImport(e) {
       const file = e.target.files[0];
+      e.target.value = '';
       if (!file) return;
       const reader = new FileReader();
       reader.onload = ev => {
         try {
-          state = JSON.parse(ev.target.result);
-          saveState();
-          renderNav();
-          switchModule(state.activeModule || "daily");
-          toast("备份已导入");
+          const parsed = JSON.parse(ev.target.result);
+          _pendingImportData = parsed.state ? parsed.state : parsed;
+          showImportConfirmDialog();
         } catch (err) { toast("导入失败，文件格式不对"); }
       };
       reader.readAsText(file);
+    }
+
+    function showImportConfirmDialog() {
+      const data = _pendingImportData;
+      if (!data) return;
+      const existing = document.getElementById('import-confirm-overlay');
+      if (existing) existing.remove();
+      const overlay = document.createElement('div');
+      overlay.id = 'import-confirm-overlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+          <h3 style="margin:0 0 12px;font-size:18px;color:#2d5bd1;">📂 导入备份确认</h3>
+          <div style="background:#f0f4ff;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:#333;line-height:1.8;">
+            <b>备份文件包含：</b><br>
+            日记 ${(data.diaries||[]).length} 条 · 读书笔记 ${(data.bookNotes||[]).length} 本<br>
+            思想熔炉 ${(data.crucible||[]).length} 个 · 问题库 ${(data.questions||[]).length} 个<br><br>
+            <b>当前本地数据：</b><br>
+            日记 ${(state.diaries||[]).length} 条 · 读书笔记 ${(state.bookNotes||[]).length} 本<br>
+            思想熔炉 ${(state.crucible||[]).length} 个 · 问题库 ${(state.questions||[]).length} 个
+          </div>
+          <p style="font-size:12px;color:#888;margin-bottom:16px;">选择导入方式：</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button onclick="performImport('merge')" style="padding:10px 16px;background:#28a745;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🔗 合并导入（推荐）</button>
+            <button onclick="performImport('replace')" style="padding:10px 16px;background:#dc3545;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">⚠️ 完全替换</button>
+            <button onclick="document.getElementById('import-confirm-overlay').remove()" style="padding:10px 16px;background:#6c757d;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">取消</button>
+          </div>
+          <p style="font-size:11px;color:#999;margin-top:12px;line-height:1.5;">合并导入：只补充本地没有的数据，不会删除现有内容。<br>完全替换：用备份覆盖所有数据，建议先导出当前数据。</p>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+    }
+
+    function performImport(mode) {
+      const data = _pendingImportData;
+      if (!data) return;
+      if (mode === 'replace') {
+        if (!confirm('确定要完全替换所有数据吗？现有内容将被覆盖！\n\n建议先点取消，用「导出备份」保存当前数据后再替换。')) return;
+      }
+      if (mode === 'merge') {
+        var mergeArrays = ['diaries','bookNotes','crucible','questions','daily','content','editing','viral','writing','brain','skills','library'];
+        mergeArrays.forEach(function(key) {
+          if (data[key] && Array.isArray(data[key])) {
+            var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
+            data[key].forEach(function(item) {
+              if (item.id && !localIds.has(item.id)) {
+                state[key] = state[key] || [];
+                state[key].push(item);
+              }
+            });
+          }
+        });
+        if (data.diary_chat && Array.isArray(data.diary_chat)) {
+          data.diary_chat.forEach(function(item) { (state.diary_chat = state.diary_chat || []).push(item); });
+        }
+        toast('合并导入完成，已补充缺失的数据');
+      } else if (mode === 'replace') {
+        state = mergeBuiltInKnowledge(data);
+        toast('数据已完全替换为备份内容');
+      }
+      saveState();
+      renderNav();
+      switchModule(state.activeModule || 'daily');
+      _pendingImportData = null;
+      var ov = document.getElementById('import-confirm-overlay');
+      if (ov) ov.remove();
     }
 
     function escapeHtml(text) {
