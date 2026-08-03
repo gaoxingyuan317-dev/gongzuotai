@@ -641,5 +641,6 @@
   "crucible": [],
   "questions": [],
   "dataVersion": "2026-08-03-questions",
-  "diaryListCollapsed": false
+  "diaryListCollapsed": false,
+  "deletedIds": []
 }
