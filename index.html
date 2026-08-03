@@ -1867,6 +1867,7 @@
         idbBackupDiaries();
         if (statusEl) statusEl.innerHTML = '<span class="diary-save-dot"></span>已保存';
         syncToFile();
+        githubAutoSync();
       } catch(err) {
         console.error('saveDiaryNow 出错:', err);
         toast('保存出错: ' + err.message);
