@@ -5582,6 +5582,6 @@ ${bodyHtml}
     // 从飞书同步日记（只拉取飞书记录，不覆盖本地数据）
     setTimeout(loadFeishuDiaries, 2000);
   </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}</script></body>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});}).catch(function(){});}</script></body>
 </html>
 
