@@ -207,68 +207,126 @@
     .diary-text { font-size: 13px; line-height: 1.7; color: var(--ink); white-space: pre-wrap; word-break: break-word; }
     .diary-input { width: 100%; min-height: 80px; padding: 10px 12px; font-size: 13px; border: 1px solid var(--rule); border-radius: 8px; resize: vertical; font-family: inherit; line-height: 1.6; }
     .diary-title-input { width: 100%; padding: 8px 12px; font-size: 14px; font-weight: 700; border: 1px solid var(--rule); border-radius: 8px; font-family: inherit; margin-bottom: 8px; }
-    /* 三栏日记布局 */
-    .diary-three-col {
-      display: flex; gap: 0; height: calc(100vh - 180px); margin: -8px -28px -30px -28px;
-      background: #fff; border-top: 1px solid var(--rule);
+    /* 苹果备忘录风格日记布局 */
+    .diary-notes-app {
+      display: flex; height: calc(100vh - 170px); margin: -8px -28px -30px -28px;
+      background: #ffffff; border-top: 1px solid var(--rule);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
     }
-    .diary-left-panel {
-      width: 240px; flex-shrink: 0; background: #f5f7f5; border-right: 1px solid var(--rule);
+    /* 左栏：列表 */
+    .diary-notes-sidebar {
+      width: 280px; flex-shrink: 0; background: #f9f9f7; border-right: 1px solid #e5e5e3;
       display: flex; flex-direction: column; overflow: hidden;
     }
-    .diary-left-header { padding: 14px 16px 10px; display: flex; justify-content: space-between; align-items: center; }
-    .diary-left-title { font-size: 14px; font-weight: 800; color: var(--ink); }
-    .diary-new-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--rule); background: #fff; cursor: pointer; font-size: 16px; color: var(--accent); display: flex; align-items: center; justify-content: center; transition: all .15s; }
-    .diary-new-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .diary-list-scroll { flex: 1; overflow-y: auto; padding: 0 8px 12px; }
-    .diary-list-item {
-      padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px;
-      transition: all .12s; position: relative; border-left: 3px solid transparent;
+    .diary-notes-sidebar-header {
+      padding: 16px 16px 10px; display: flex; justify-content: space-between; align-items: center;
     }
-    .diary-list-item:hover { background: rgba(255,255,255,.6); }
-    .diary-list-item.active {
-      background: #fff; border-left-color: var(--accent);
+    .diary-notes-sidebar-title {
+      font-size: 17px; font-weight: 700; color: #1d1d1f; cursor: pointer;
+      display: flex; align-items: center; gap: 4px; user-select: none;
     }
-    .diary-list-item-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .diary-list-item-preview { font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 3px; }
-    .diary-list-item-date { font-size: 10px; color: #aaa; }
-    .diary-mid-panel { flex: 1; display: flex; flex-direction: column; background: #fff; overflow: hidden; }
-    .diary-mid-header { padding: 14px 24px 10px; display: flex; justify-content: space-between; align-items: center; }
-    .diary-mid-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .08em; }
-    .diary-mid-title-row { display: flex; align-items: center; gap: 10px; }
-    .diary-mid-title-input {
-      flex: 1; font-size: 20px; font-weight: 800; border: none; outline: none;
-      padding: 4px 0; background: transparent; color: var(--ink); font-family: inherit;
+    .diary-notes-sidebar-title .chevron { font-size: 12px; transition: transform .2s; color: #86868b; }
+    .diary-notes-sidebar-title.collapsed .chevron { transform: rotate(-90deg); }
+    .diary-notes-new-btn {
+      width: 28px; height: 28px; border-radius: 7px; border: none; background: #fff;
+      cursor: pointer; font-size: 18px; color: #ffb340; display: flex; align-items: center;
+      justify-content: center; transition: all .15s; box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
-    .diary-mid-title-input::placeholder { color: #ccc; }
-    .diary-delete-btn { width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-    .diary-delete-btn:hover { background: rgba(197,90,80,.1); color: #c55a50; }
-    .diary-editor-area {
-      flex: 1; overflow-y: auto; padding: 8px 24px 16px;
+    .diary-notes-new-btn:hover { background: #ffb340; color: #fff; }
+    .diary-notes-list {
+      flex: 1; overflow-y: auto; padding: 0 8px 12px;
     }
-    .diary-editor-textarea {
+    .diary-notes-list.collapsed { display: none; }
+    .diary-date-section {
+      font-size: 11px; font-weight: 700; color: #86868b; padding: 12px 10px 6px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .diary-note-card {
+      padding: 10px 12px; border-radius: 10px; cursor: pointer; margin-bottom: 1px;
+      transition: background .1s; background: transparent;
+    }
+    .diary-note-card:hover { background: rgba(0,0,0,.04); }
+    .diary-note-card.active { background: #ffe8b3; }
+    .diary-note-card-title {
+      font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .diary-note-card-preview {
+      font-size: 12px; color: #86868b; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; margin-bottom: 2px; line-height: 1.4;
+    }
+    .diary-note-card-meta { font-size: 11px; color: #aeaeb2; }
+    /* 右栏：编辑区 */
+    .diary-notes-editor {
+      flex: 1; display: flex; flex-direction: column; background: #fff; overflow: hidden;
+    }
+    .diary-notes-editor-header {
+      padding: 12px 24px 8px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #f0f0ee;
+    }
+    .diary-notes-back-btn {
+      display: flex; align-items: center; gap: 4px; font-size: 14px; color: #ffb340;
+      background: none; border: none; cursor: pointer; font-weight: 500; padding: 4px 8px;
+      border-radius: 6px; transition: background .12s;
+    }
+    .diary-notes-back-btn:hover { background: rgba(255,179,64,.1); }
+    .diary-notes-editor-actions { display: flex; gap: 8px; align-items: center; }
+    .diary-notes-delete-btn {
+      width: 30px; height: 30px; border-radius: 7px; border: none; background: transparent;
+      color: #86868b; cursor: pointer; font-size: 15px; display: flex; align-items: center;
+      justify-content: center; transition: all .12s;
+    }
+    .diary-notes-delete-btn:hover { background: rgba(255,59,48,.1); color: #ff3b30; }
+    .diary-notes-title-wrap { padding: 16px 24px 0; }
+    .diary-notes-title-input {
+      width: 100%; font-size: 22px; font-weight: 700; border: none; outline: none;
+      padding: 4px 0; background: transparent; color: #1d1d1f;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    }
+    .diary-notes-title-input::placeholder { color: #c7c7cc; font-weight: 400; }
+    .diary-notes-meta-row {
+      padding: 6px 24px 8px; font-size: 12px; color: #86868b;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .diary-notes-editor-area { flex: 1; overflow-y: auto; padding: 8px 24px 20px; }
+    .diary-notes-textarea {
       width: 100%; min-height: 100%; border: none; outline: none; resize: none;
-      font-size: 14px; line-height: 1.8; color: var(--ink); font-family: inherit;
+      font-size: 15px; line-height: 1.7; color: #1d1d1f;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
       background: transparent;
     }
-    .diary-editor-textarea::placeholder { color: #ccc; }
-    .diary-status-bar {
-      padding: 8px 24px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center;
-      background: #fafbfa; flex-shrink: 0;
+    .diary-notes-textarea::placeholder { color: #c7c7cc; }
+    .diary-notes-status-bar {
+      padding: 8px 24px; border-top: 1px solid #f0f0ee; display: flex;
+      justify-content: space-between; align-items: center; background: #fafafa; flex-shrink: 0;
     }
-    .diary-status-left { display: flex; gap: 14px; align-items: center; }
-    .diary-word-count { font-size: 11px; color: var(--muted); }
-    .diary-save-status { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
-    .diary-save-dot { width: 7px; height: 7px; border-radius: 50%; background: #6b8e5e; }
-    .diary-continue-btn { background: var(--accent); color: #fff; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all .15s; }
-    .diary-continue-btn:hover { background: #2448b8; }
-    .diary-right-panel {
-      width: 300px; flex-shrink: 0; background: #fff; border-left: 1px solid var(--rule);
-      display: flex; flex-direction: column; overflow: hidden;
+    .diary-notes-status-left { display: flex; gap: 12px; align-items: center; }
+    .diary-notes-save-btn {
+      background: #ffb340; color: #fff; border: none; padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .diary-ai-header { padding: 14px 16px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--rule); }
-    .diary-ai-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-    .diary-ai-status { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .diary-notes-save-btn:hover { background: #f5a623; }
+    .diary-notes-ai-btn {
+      background: #f5f5f7; color: #1d1d1f; border: 1px solid #e5e5e3; padding: 6px 14px;
+      border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 4px; transition: all .12s;
+    }
+    .diary-notes-ai-btn:hover { background: #ebebed; }
+    /* AI 助手浮层 */
+    .diary-ai-overlay {
+      position: fixed; top: 0; right: 0; width: 360px; height: 100vh; background: #fff;
+      box-shadow: -3px 0 20px rgba(0,0,0,.12); z-index: 9999; display: flex;
+      flex-direction: column; transform: translateX(100%); transition: transform .25s ease;
+    }
+    .diary-ai-overlay.open { transform: translateX(0); }
+    .diary-ai-overlay-header {
+      padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--rule); background: #fafafa;
+    }
+    .diary-ai-overlay-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .diary-ai-overlay-close { width: 28px; height: 28px; border-radius: 7px; border: none; background: transparent; font-size: 16px; cursor: pointer; color: #86868b; }
+    .diary-ai-overlay-close:hover { background: rgba(0,0,0,.06); }
     .diary-ai-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
     .diary-ai-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--muted); }
     .diary-ai-empty-icon { font-size: 36px; opacity: .4; }
@@ -277,16 +335,19 @@
     .diary-ai-msg { display: flex; gap: 8px; }
     .diary-ai-msg.user { flex-direction: row-reverse; }
     .diary-ai-bubble { max-width: 85%; padding: 9px 12px; border-radius: 10px; font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
-    .diary-ai-msg.user .diary-ai-bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 3px; }
-    .diary-ai-msg.ai .diary-ai-bubble { background: #f5f7f5; color: var(--ink); border: 1px solid var(--rule); border-bottom-left-radius: 3px; }
+    .diary-ai-msg.user .diary-ai-bubble { background: #ffb340; color: #fff; border-bottom-right-radius: 3px; }
+    .diary-ai-msg.ai .diary-ai-bubble { background: #f5f5f7; color: #1d1d1f; border: 1px solid #e5e5e3; border-bottom-left-radius: 3px; }
     .diary-ai-quick-btns { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
-    .diary-ai-quick-btn { font-size: 11px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--rule); background: #f5f7f5; color: var(--ink); cursor: pointer; font-weight: 600; transition: all .12s; }
-    .diary-ai-quick-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .diary-ai-quick-btn { font-size: 11px; padding: 5px 10px; border-radius: 6px; border: 1px solid #e5e5e3; background: #f5f5f7; color: #1d1d1f; cursor: pointer; font-weight: 600; transition: all .12s; }
+    .diary-ai-quick-btn:hover { background: #ffb340; color: #fff; border-color: #ffb340; }
     .diary-ai-input-area { padding: 10px 12px; border-top: 1px solid var(--rule); display: flex; gap: 6px; }
     .diary-ai-input { flex: 1; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; font-size: 12px; outline: none; font-family: inherit; }
-    .diary-ai-input:focus { border-color: var(--accent); }
-    .diary-ai-send { width: 34px; height: 34px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .diary-ai-send:hover { background: #2448b8; }
+    .diary-ai-input:focus { border-color: #ffb340; }
+    .diary-ai-send { width: 34px; height: 34px; border-radius: 8px; border: none; background: #ffb340; color: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .diary-ai-send:hover { background: #f5a623; }
+    .diary-save-dot { width: 7px; height: 7px; border-radius: 50%; background: #34c759; }
+    .diary-word-count { font-size: 11px; color: #86868b; }
+    .diary-save-status { font-size: 11px; color: #86868b; display: flex; align-items: center; gap: 4px; }
     .hero-card { background: rgba(255,255,255,.94); border-color: var(--rule); }
     .card-list-grid {
       display: grid;
@@ -407,18 +468,20 @@
       .item-card { padding: 12px 13px; }
       .input { padding: 9px 11px; font-size: 13px; }
       .toast { bottom: 12px; right: 12px; left: 12px; text-align: center; }
-      /* 日记三栏适配为上下栏 */
-      .diary-three-col {
+      /* 苹果备忘录风格移动端适配 */
+      .diary-notes-app {
         flex-direction: column; height: calc(100vh - 64px);
         margin: -8px -12px -20px -12px;
       }
-      .diary-left-panel { width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--rule); }
-      .diary-right-panel { width: 100%; max-height: 240px; border-left: none; border-top: 1px solid var(--rule); }
-      .diary-mid-panel { flex: 1; min-height: 0; }
-      .diary-editor-area { padding: 8px 14px 12px; }
-      .diary-mid-header { padding: 10px 14px 6px; }
-      .diary-status-bar { padding: 6px 14px; }
-      .diary-mid-title-input { font-size: 16px; }
+      .diary-notes-sidebar { width: 100%; max-height: 220px; border-right: none; border-bottom: 1px solid #e5e5e3; }
+      .diary-notes-editor { flex: 1; min-height: 0; }
+      .diary-notes-editor-area { padding: 8px 14px 12px; }
+      .diary-notes-editor-header { padding: 10px 14px 6px; }
+      .diary-notes-status-bar { padding: 6px 14px; }
+      .diary-notes-title-input { font-size: 18px; }
+      .diary-notes-title-wrap { padding: 12px 14px 0; }
+      .diary-notes-meta-row { padding: 4px 14px 6px; }
+      .diary-ai-overlay { width: 100%; }
     }
     /* 对话窗口 */
     .chat-box {
@@ -1628,95 +1691,120 @@
         const sel = state.selectedDiaryId;
         const selected = sel ? diaries.find(d => d.id === sel) : null;
         const diaryChat = state.diary_chat || [];
+        const isCollapsed = state.diaryListCollapsed || false;
+        // 按日期分组
+        const grouped = {};
+        diaries.slice().reverse().forEach(d => {
+          const dateKey = d.date || '未知日期';
+          if (!grouped[dateKey]) grouped[dateKey] = [];
+          grouped[dateKey].push(d);
+        });
+        const dateKeys = Object.keys(grouped).sort().reverse();
+
         html += `
-          <div class="diary-three-col">
-            <!-- 左栏：日记列表 -->
-            <div class="diary-left-panel">
-              <div class="diary-left-header">
-                <span class="diary-left-title">全部记录</span>
-                <div style="display:flex; gap:4px;">
-                  <button class="diary-new-btn" onclick="connectFileSync()" title="连接永久存储" id="diary-sync-btn" style="font-size:13px;">🔗</button>
-                  <button class="diary-new-btn" onclick="newDiary()" title="新建">✎</button>
-                </div>
+          <div class="diary-notes-app">
+            <!-- 左栏：备忘录列表 -->
+            <div class="diary-notes-sidebar">
+              <div class="diary-notes-sidebar-header">
+                <span class="diary-notes-sidebar-title ${isCollapsed ? 'collapsed' : ''}" onclick="toggleDiaryList()">
+                  <span class="chevron">▼</span> 记录
+                </span>
+                <button class="diary-notes-new-btn" onclick="newDiary()" title="新建记录">✏</button>
               </div>
-              <div id="diary-sync-status" style="padding:0 16px 6px; font-size:10px; color:var(--muted);">${state.fileSyncConnected ? '✅ 已连接永久存储' : '⚠ 仅浏览器保存，点击🔗连接文件'}</div>
-              <div class="diary-list-scroll" id="diary-list-scroll">
+              <div class="diary-notes-list ${isCollapsed ? 'collapsed' : ''}" id="diary-notes-list">
         `;
         if (diaries.length === 0) {
-          html += `<div style="padding:20px 12px; text-align:center; color:var(--muted); font-size:12px;">还没有记录<br>点击右上角✎新建</div>`;
+          html += `<div style="padding:30px 12px; text-align:center; color:#86868b; font-size:13px;">还没有记录<br>点击 ✏ 新建</div>`;
         } else {
-          diaries.slice().reverse().forEach(d => {
-            const isActive = selected && selected.id === d.id;
-            const preview = (d.content || '').slice(0, 40);
-            const dateShort = (d.date || '').replace(/^\d{4}-/, '').replace('-', '月') + '日';
-            html += `
-              <div class="diary-list-item ${isActive ? 'active' : ''}" onclick="selectDiary('${d.id}')">
-                <div class="diary-list-item-title">${escapeHtml(d.title || d.date)}</div>
-                <div class="diary-list-item-preview">${escapeHtml(preview)}</div>
-                <div class="diary-list-item-date">${dateShort} ${d.time || ''}</div>
-              </div>
-            `;
+          dateKeys.forEach(dateKey => {
+            // 日期标题格式化
+            const today = todayStr();
+            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+            let dateLabel = dateKey;
+            if (dateKey === today) dateLabel = '今天';
+            else if (dateKey === yesterday) dateLabel = '昨天';
+            else dateLabel = dateKey.replace(/^\d{4}-/, '').replace('-', '月') + '日';
+
+            html += `<div class="diary-date-section">${escapeHtml(dateLabel)}</div>`;
+            grouped[dateKey].forEach(d => {
+              const isActive = selected && selected.id === d.id;
+              const preview = (d.content || '').slice(0, 50).replace(/\\n/g, ' ');
+              const timeShort = d.time || '';
+              html += `
+                <div class="diary-note-card ${isActive ? 'active' : ''}" onclick="selectDiary('${d.id}')">
+                  <div class="diary-note-card-title">${escapeHtml(d.title || '新记录')}</div>
+                  <div class="diary-note-card-preview">${escapeHtml(preview) || '没有内容'}</div>
+                  <div class="diary-note-card-meta">${timeShort}</div>
+                </div>
+              `;
+            });
           });
         }
         html += `
               </div>
             </div>
-            <!-- 中栏：编辑区 -->
-            <div class="diary-mid-panel">
+            <!-- 右栏：编辑区 -->
+            <div class="diary-notes-editor">
         `;
         if (selected) {
           html += `
-              <div class="diary-mid-header">
-                <span class="diary-mid-label">WRITING ROOM</span>
-                <button class="diary-delete-btn" onclick="deleteDiary('${selected.id}')" title="删除">🗑</button>
+              <div class="diary-notes-editor-header">
+                <button class="diary-notes-back-btn" onclick="saveDiaryAndExit()">
+                  <span style="font-size:16px;">‹</span> 返回
+                </button>
+                <div class="diary-notes-editor-actions">
+                  <button class="diary-notes-ai-btn" onclick="toggleDiaryAIOverlay()">🤖 助手</button>
+                  <button class="diary-notes-delete-btn" onclick="deleteDiary('${selected.id}')" title="删除">🗑</button>
+                </div>
               </div>
-              <div class="diary-mid-title-row" style="padding: 0 24px;">
-                <input class="diary-mid-title-input" id="diary-edit-title" value="${escapeHtml(selected.title || '')}" placeholder="标题（可选）" oninput="onDiaryInput()" onblur="saveDiaryNow()" />
+              <div class="diary-notes-title-wrap">
+                <input class="diary-notes-title-input" id="diary-edit-title" value="${escapeHtml(selected.title || '')}" placeholder="标题" oninput="onDiaryInput()" onblur="saveDiaryNow()" />
               </div>
-              <div class="diary-editor-area">
-                <textarea class="diary-editor-textarea" id="diary-edit-content" placeholder="随时记录，想写什么就写什么..." oninput="onDiaryInput()" onblur="saveDiaryNow()">${escapeHtml(selected.content || '')}</textarea>
+              <div class="diary-notes-meta-row">
+                <span>${selected.date || ''} ${selected.time || ''}</span>
+                <span class="diary-save-status" id="diary-save-status"><span class="diary-save-dot"></span>已保存</span>
               </div>
-              <div class="diary-status-bar">
-                <div class="diary-status-left">
+              <div class="diary-notes-editor-area">
+                <textarea class="diary-notes-textarea" id="diary-edit-content" placeholder="开始记录..." oninput="onDiaryInput()" onblur="saveDiaryNow()">${escapeHtml(selected.content || '')}</textarea>
+              </div>
+              <div class="diary-notes-status-bar">
+                <div class="diary-notes-status-left">
                   <span class="diary-word-count" id="diary-word-count">${(selected.content || '').length}字</span>
-                  <span class="diary-save-status" id="diary-save-status"><span class="diary-save-dot"></span>已保存</span>
                 </div>
-                <div style="display:flex; gap:8px;">
-                  <button class="btn btn-secondary" onclick="saveDiaryAndExit()" style="font-size:12px; padding:7px 14px;">💾 保存</button>
-                  <button class="diary-continue-btn" onclick="continueWriting()">✦ 继续创作</button>
-                </div>
+                <button class="diary-notes-save-btn" onclick="saveDiaryAndExit()">完成</button>
               </div>
           `;
         } else {
           html += `
-              <div class="diary-mid-header">
-                <span class="diary-mid-label">WRITING ROOM</span>
+              <div class="diary-notes-editor-header">
+                <span style="font-size:13px; color:#86868b; font-weight:600;">记录</span>
               </div>
-              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:var(--muted);">
-                <div style="font-size:42px; opacity:.3;">📖</div>
-                <div style="font-size:15px; font-weight:600; color:var(--ink);">从这里开始</div>
-                <div style="font-size:12px;">选择左侧记录查看，或点击✎新建一条</div>
-                <button class="diary-continue-btn" onclick="newDiary()" style="margin-top:8px;">✦ 新建记录</button>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:#86868b;">
+                <div style="font-size:48px; opacity:.15;">📝</div>
+                <div style="font-size:16px; font-weight:600; color:#1d1d1f;">没有选中的记录</div>
+                <div style="font-size:13px;">从左侧选择一条记录，或新建一条</div>
+                <button class="diary-notes-save-btn" onclick="newDiary()" style="margin-top:4px;">✏ 新建记录</button>
               </div>
           `;
         }
         html += `
             </div>
-            <!-- 右栏：AI助手 -->
-            <div class="diary-right-panel">
-              <div class="diary-ai-header">
-                <span class="diary-ai-title">🤖 写作助手</span>
-                <span class="diary-ai-status"><span class="diary-save-dot"></span>本地记录模式</span>
-              </div>
-              <div class="diary-ai-messages" id="diary-ai-messages">
+          </div>
+          <!-- AI助手浮层 -->
+          <div class="diary-ai-overlay" id="diary-ai-overlay">
+            <div class="diary-ai-overlay-header">
+              <span class="diary-ai-overlay-title">🤖 写作助手</span>
+              <button class="diary-ai-overlay-close" onclick="toggleDiaryAIOverlay()">✕</button>
+            </div>
+            <div class="diary-ai-messages" id="diary-ai-messages">
         `;
         if (diaryChat.length === 0) {
           html += `
-                <div class="diary-ai-empty">
-                  <div class="diary-ai-empty-icon">💬</div>
-                  <div class="diary-ai-empty-text">从这里开始</div>
-                  <div class="diary-ai-empty-hint">对话会先保存，连接AI后可直接分析执行。</div>
-                </div>
+              <div class="diary-ai-empty">
+                <div class="diary-ai-empty-icon">💬</div>
+                <div class="diary-ai-empty-text">从这里开始</div>
+                <div class="diary-ai-empty-hint">对话会先保存，连接AI后可直接分析执行。</div>
+              </div>
           `;
         } else {
           diaryChat.forEach(msg => {
@@ -1724,16 +1812,15 @@
           });
         }
         html += `
-              </div>
-              <div class="diary-ai-quick-btns">
-                <button class="diary-ai-quick-btn" onclick="diaryQuickAction('expand')">扩写这条灵感</button>
-                <button class="diary-ai-quick-btn" onclick="diaryQuickAction('tone')">保留我的语气</button>
-                <button class="diary-ai-quick-btn" onclick="diaryQuickAction('series')">整理成系列</button>
-              </div>
-              <div class="diary-ai-input-area">
-                <input class="diary-ai-input" id="diary-ai-input" placeholder="给写作助手指令..." onkeydown="if(event.key==='Enter')sendDiaryChat()" />
-                <button class="diary-ai-send" onclick="sendDiaryChat()">➤</button>
-              </div>
+            </div>
+            <div class="diary-ai-quick-btns">
+              <button class="diary-ai-quick-btn" onclick="diaryQuickAction('expand')">扩写灵感</button>
+              <button class="diary-ai-quick-btn" onclick="diaryQuickAction('tone')">保留语气</button>
+              <button class="diary-ai-quick-btn" onclick="diaryQuickAction('series')">整理系列</button>
+            </div>
+            <div class="diary-ai-input-area">
+              <input class="diary-ai-input" id="diary-ai-input" placeholder="给助手指令..." onkeydown="if(event.key==='Enter')sendDiaryChat()" />
+              <button class="diary-ai-send" onclick="sendDiaryChat()">➤</button>
             </div>
           </div>
         `;
@@ -1881,20 +1968,37 @@
         githubAutoSync();
         // 重新渲染左侧日记列表（显示最新标题）
         if (activeModule === 'writing') {
-          var leftPanel = document.querySelector('.diary-left-panel');
-          if (leftPanel) {
-            // 只更新左侧列表，不重新渲染整个编辑区，避免输入框失焦
+          var notesList = document.getElementById('diary-notes-list');
+          if (notesList) {
             var diaryList = state.diaries.slice().reverse();
-            var listHtml = '<div style="padding:12px 14px 8px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;">记录列表 (' + state.diaries.length + ')</div>';
-            diaryList.forEach(function(item) {
-              var isActive = item.id === state.selectedDiaryId;
-              var titleDisplay = item.title || '(无标题)';
-              listHtml += '<div class="diary-item' + (isActive ? ' active' : '') + '" onclick="selectDiary(\'' + item.id + '\')">' +
-                '<div class="diary-item-title">' + escapeHtml(titleDisplay) + '</div>' +
-                '<div class="diary-item-date">' + (item.date || '') + ' ' + (item.time || '') + '</div>' +
-              '</div>';
+            var grouped = {};
+            diaryList.forEach(function(d) {
+              var dk = d.date || '未知日期';
+              if (!grouped[dk]) grouped[dk] = [];
+              grouped[dk].push(d);
             });
-            leftPanel.innerHTML = listHtml;
+            var dateKeys = Object.keys(grouped).sort().reverse();
+            var listHtml = '';
+            var todayD = todayStr();
+            var yesterdayD = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+            dateKeys.forEach(function(dateKey) {
+              var dateLabel = dateKey;
+              if (dateKey === todayD) dateLabel = '今天';
+              else if (dateKey === yesterdayD) dateLabel = '昨天';
+              else dateLabel = dateKey.replace(/^\\d{4}-/, '').replace('-', '月') + '日';
+              listHtml += '<div class="diary-date-section">' + escapeHtml(dateLabel) + '</div>';
+              grouped[dateKey].forEach(function(item) {
+                var isActive = item.id === state.selectedDiaryId;
+                var titleDisplay = item.title || '新记录';
+                var preview = (item.content || '').slice(0, 50).replace(/\\n/g, ' ');
+                listHtml += '<div class="diary-note-card' + (isActive ? ' active' : '') + '" onclick="selectDiary(\'' + item.id + '\')">' +
+                  '<div class="diary-note-card-title">' + escapeHtml(titleDisplay) + '</div>' +
+                  '<div class="diary-note-card-preview">' + escapeHtml(preview) + '</div>' +
+                  '<div class="diary-note-card-meta">' + (item.time || '') + '</div>' +
+                '</div>';
+              });
+            });
+            notesList.innerHTML = listHtml;
           }
         }
       } catch(err) {
@@ -1907,13 +2011,35 @@
 
     function saveDiaryAndExit() {
       saveDiaryNow();
-      toast('✅ 已保存，正在同步到云端...');
-      // 0.8秒后跳回日记列表视图
+      toast('✅ 已保存');
       setTimeout(function() {
         state.selectedDiaryId = null;
         saveState();
         renderModule();
-      }, 800);
+      }, 600);
+    }
+
+    function toggleDiaryList() {
+      state.diaryListCollapsed = !state.diaryListCollapsed;
+      saveState();
+      var titleEl = document.querySelector('.diary-notes-sidebar-title');
+      var listEl = document.getElementById('diary-notes-list');
+      if (titleEl && listEl) {
+        if (state.diaryListCollapsed) {
+          titleEl.classList.add('collapsed');
+          listEl.classList.add('collapsed');
+        } else {
+          titleEl.classList.remove('collapsed');
+          listEl.classList.remove('collapsed');
+        }
+      }
+    }
+
+    function toggleDiaryAIOverlay() {
+      var overlay = document.getElementById('diary-ai-overlay');
+      if (overlay) {
+        overlay.classList.toggle('open');
+      }
     }
 
     // ===== 文件永久存储 =====
