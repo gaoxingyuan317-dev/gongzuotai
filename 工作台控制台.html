@@ -1738,7 +1738,7 @@
               const preview = (d.content || '').slice(0, 50).replace(/\\n/g, ' ');
               const timeShort = d.time || '';
               html += `
-                <div class="diary-note-card ${isActive ? 'active' : ''}" onclick="selectDiary('${d.id}')">
+                <div class="diary-note-card ${isActive ? 'active' : ''}" onclick="selectDiary('${d.id}')" ontouchstart="diaryLongPressStart('${d.id}', event)" ontouchend="diaryLongPressEnd()" ontouchmove="diaryLongPressEnd()" onmousedown="diaryLongPressStart('${d.id}', event)" onmouseup="diaryLongPressEnd()" onmouseleave="diaryLongPressEnd()">
                   <div class="diary-note-card-title">${escapeHtml(d.title || '新记录')}</div>
                   <div class="diary-note-card-preview">${escapeHtml(preview) || '没有内容'}</div>
                   <div class="diary-note-card-meta">${timeShort}</div>
@@ -1907,6 +1907,7 @@
     }
 
     function selectDiary(id) {
+      if (diaryLongPressTriggered) { diaryLongPressTriggered = false; return; }
       flushDiarySave();
       state.selectedDiaryId = id;
       saveState();
@@ -1999,7 +2000,7 @@
                 var isActive = item.id === state.selectedDiaryId;
                 var titleDisplay = item.title || '新记录';
                 var preview = (item.content || '').slice(0, 50).replace(/\\n/g, ' ');
-                listHtml += '<div class="diary-note-card' + (isActive ? ' active' : '') + '" onclick="selectDiary(\'' + item.id + '\')">' +
+                listHtml += '<div class="diary-note-card' + (isActive ? ' active' : '') + '" onclick="selectDiary(\'' + item.id + '\')" ontouchstart="diaryLongPressStart(\'' + item.id + '\', event)" ontouchend="diaryLongPressEnd()" ontouchmove="diaryLongPressEnd()" onmousedown="diaryLongPressStart(\'' + item.id + '\', event)" onmouseup="diaryLongPressEnd()" onmouseleave="diaryLongPressEnd()">' +
                   '<div class="diary-note-card-title">' + escapeHtml(titleDisplay) + '</div>' +
                   '<div class="diary-note-card-preview">' + escapeHtml(preview) + '</div>' +
                   '<div class="diary-note-card-meta">' + (item.time || '') + '</div>' +
@@ -2048,6 +2049,23 @@
       if (overlay) {
         overlay.classList.toggle('open');
       }
+    }
+
+    // ===== 长按删除日记 =====
+    var diaryLongPressTimer = null;
+    var diaryLongPressTriggered = false;
+    function diaryLongPressStart(id, e) {
+      diaryLongPressTriggered = false;
+      if (diaryLongPressTimer) clearTimeout(diaryLongPressTimer);
+      diaryLongPressTimer = setTimeout(function() {
+        diaryLongPressTriggered = true;
+        if (confirm('确定要删除这条记录吗？')) {
+          deleteDiary(id);
+        }
+      }, 600);
+    }
+    function diaryLongPressEnd() {
+      if (diaryLongPressTimer) { clearTimeout(diaryLongPressTimer); diaryLongPressTimer = null; }
     }
 
     // ===== 文件永久存储 =====
