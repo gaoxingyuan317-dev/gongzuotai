@@ -1832,20 +1832,45 @@
     }
 
     function saveDiaryNow() {
-      if (diarySaveTimer) { clearTimeout(diarySaveTimer); diarySaveTimer = null; }
-      var titleEl = document.getElementById('diary-edit-title');
-      var contentEl = document.getElementById('diary-edit-content');
-      var statusEl = document.getElementById('diary-save-status');
-      if (!titleEl || !contentEl) return;
-      var d = state.diaries.find(function(x) { return x.id === state.selectedDiaryId; });
-      if (d) {
-        d.title = titleEl.value.trim();
-        d.content = contentEl.value;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      try {
+        if (diarySaveTimer) { clearTimeout(diarySaveTimer); diarySaveTimer = null; }
+        var titleEl = document.getElementById('diary-edit-title');
+        var contentEl = document.getElementById('diary-edit-content');
+        var statusEl = document.getElementById('diary-save-status');
+        if (!titleEl || !contentEl) { console.log('saveDiaryNow: 编辑器元素不存在'); return; }
+        if (!state.diaries || !Array.isArray(state.diaries)) state.diaries = [];
+        var d = null;
+        if (state.selectedDiaryId) {
+          d = state.diaries.find(function(x) { return x.id === state.selectedDiaryId; });
+        }
+        if (!d) {
+          // 如果选中的日记不存在，自动创建一条新日记
+          d = {
+            id: Date.now().toString() + Math.random().toString(36).slice(2),
+            date: todayStr(),
+            time: nowText().split(' ')[1] || '',
+            title: '',
+            content: ''
+          };
+          state.diaries.push(d);
+          state.selectedDiaryId = d.id;
+          console.log('saveDiaryNow: 自动创建了新日记', d.id);
+        }
+        d.title = (titleEl.value || '').trim();
+        d.content = contentEl.value || '';
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch(storageErr) {
+          console.error('localStorage 保存失败:', storageErr);
+          toast('存储空间不足，请导出备份后清理');
+        }
         idbBackupDiaries();
         if (statusEl) statusEl.innerHTML = '<span class="diary-save-dot"></span>已保存';
+        syncToFile();
+      } catch(err) {
+        console.error('saveDiaryNow 出错:', err);
+        toast('保存出错: ' + err.message);
       }
-      syncToFile();
     }
 
     function flushDiarySave() { saveDiaryNow(); }
