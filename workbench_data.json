@@ -340,13 +340,6 @@
   "dataVersion": "2026-08-03-questions",
   "diaries": [
     {
-      "id": "1785560129322ytb02pabu0l",
-      "date": "2026-08-01",
-      "time": "12:55",
-      "title": "",
-      "content": ""
-    },
-    {
       "id": "1785733037633xymqn378ntf",
       "date": "2026-08-03",
       "time": "12:57",
@@ -361,7 +354,7 @@
       "content": ""
     }
   ],
-  "selectedDiaryId": "1785560129322ytb02pabu0l",
+  "selectedDiaryId": "1785733006921k8enhhjsk3b",
   "diary_chat": [],
   "fileSyncConnected": false,
   "bookNotes": [
