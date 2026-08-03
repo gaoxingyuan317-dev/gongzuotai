@@ -1843,8 +1843,8 @@
         if (state.selectedDiaryId) {
           d = state.diaries.find(function(x) { return x.id === state.selectedDiaryId; });
         }
+        // 如果选中的日记不存在，自动创建一条新日记
         if (!d) {
-          // 如果选中的日记不存在，自动创建一条新日记
           d = {
             id: Date.now().toString() + Math.random().toString(36).slice(2),
             date: todayStr(),
@@ -1856,18 +1856,47 @@
           state.selectedDiaryId = d.id;
           console.log('saveDiaryNow: 自动创建了新日记', d.id);
         }
-        d.title = (titleEl.value || '').trim();
-        d.content = contentEl.value || '';
+        // 读取标题和内容，同时兼容 value 和 textContent
+        d.title = (titleEl.value || titleEl.textContent || '').trim();
+        d.content = contentEl.value || contentEl.textContent || '';
+        d.date = d.date || todayStr();
+        // 更新字数显示
+        var wcEl = document.getElementById('diary-word-count');
+        if (wcEl) wcEl.textContent = d.content.length + '字';
+        // 保存到 localStorage
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch(storageErr) {
           console.error('localStorage 保存失败:', storageErr);
           toast('存储空间不足，请导出备份后清理');
+          return;
         }
+        // IndexedDB 备份
         idbBackupDiaries();
-        if (statusEl) statusEl.innerHTML = '<span class="diary-save-dot"></span>已保存';
+        // 更新状态显示
+        if (statusEl) statusEl.innerHTML = '<span class="diary-save-dot"></span>已保存 ✓';
+        // 文件同步
         syncToFile();
+        // GitHub 云端自动同步（3秒延迟）
         githubAutoSync();
+        // 重新渲染左侧日记列表（显示最新标题）
+        if (activeModule === 'writing') {
+          var leftPanel = document.querySelector('.diary-left-panel');
+          if (leftPanel) {
+            // 只更新左侧列表，不重新渲染整个编辑区，避免输入框失焦
+            var diaryList = state.diaries.slice().reverse();
+            var listHtml = '<div style="padding:12px 14px 8px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;">记录列表 (' + state.diaries.length + ')</div>';
+            diaryList.forEach(function(item) {
+              var isActive = item.id === state.selectedDiaryId;
+              var titleDisplay = item.title || '(无标题)';
+              listHtml += '<div class="diary-item' + (isActive ? ' active' : '') + '" onclick="selectDiary(\'' + item.id + '\')">' +
+                '<div class="diary-item-title">' + escapeHtml(titleDisplay) + '</div>' +
+                '<div class="diary-item-date">' + (item.date || '') + ' ' + (item.time || '') + '</div>' +
+              '</div>';
+            });
+            leftPanel.innerHTML = listHtml;
+          }
+        }
       } catch(err) {
         console.error('saveDiaryNow 出错:', err);
         toast('保存出错: ' + err.message);
