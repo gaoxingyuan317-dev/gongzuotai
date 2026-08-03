@@ -3155,6 +3155,7 @@
 
         // 搜索结果
         const searchQuery = typeof libSearchQuery !== 'undefined' ? libSearchQuery : '';
+        html += `<div id="lib-search-results">`;
         if (searchQuery && searchQuery.trim()) {
           const q = searchQuery.trim().toLowerCase();
           const results = bookNotes.filter(b =>
@@ -3186,7 +3187,9 @@
           } else {
             html += `<div class="empty">未找到匹配的书籍。</div>`;
           }
-        } else {
+        }
+        html += `</div>`;
+
           // === 主页大类目导航栏 ===
           const totalBooks = bookNotes.length;
           const totalReco = RECO_BOOK_DB.length;
@@ -3198,15 +3201,6 @@
             <button class="lib-home-nav-btn ${libHomeTab==='reco'?'active':''}" onclick="libSwitchHomeTab('reco')">✨ 推荐书<span class="nav-count">${totalReco}</span></button>
             <button class="lib-home-nav-btn ${libHomeTab==='crucible'?'active':''}" onclick="libSwitchHomeTab('crucible')">🔥 思想熔炉<span class="nav-count">${crucibleCount}</span></button>
             <button class="lib-home-nav-btn ${libHomeTab==='questions'?'active':''}" onclick="libSwitchHomeTab('questions')">❓ 问题库<span class="nav-count">${questionCount}</span></button>
-          </div>`;
-
-          // 微信读书 Skill 状态栏（已安装已配置）
-          html += `<div style="background:linear-gradient(135deg,#1aad19,#07c160);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-            <span style="font-size:28px;">📗</span>
-            <div style="flex:1;min-width:180px;">
-              <div style="font-size:15px;font-weight:800;color:#fff;">微信读书 Skill <span style="background:#fff;color:#07c160;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:4px;">已安装</span> <span style="background:rgba(255,255,255,.25);color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:4px;">已配置</span></div>
-              <div style="font-size:11px;color:rgba(255,255,255,.85);margin-top:2px;">直接在对话窗口输入指令使用，例如"帮我搜书""导出我的划线""看看我的书架""同步微信读书书架"</div>
-            </div>
           </div>`;
 
           if (libHomeTab === 'categories') {
@@ -3689,12 +3683,45 @@
 
     function libSearchBooks(val) {
       libSearchQuery = val;
-      renderModule();
-      // 恢复搜索框焦点
-      setTimeout(() => {
-        const el = document.getElementById('lib-search-input');
-        if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
-      }, 10);
+      // 只更新搜索结果区域，不重新渲染整个模块，避免输入框失去焦点
+      const resultEl = document.getElementById('lib-search-results');
+      if (!resultEl) return;
+      if (!val || !val.trim()) {
+        resultEl.innerHTML = '';
+        return;
+      }
+      const q = val.trim().toLowerCase();
+      const bookNotes = state.bookNotes || [];
+      const results = bookNotes.filter(b =>
+        (b.title || '').toLowerCase().includes(q) ||
+        (b.author || '').toLowerCase().includes(q) ||
+        (b.note || '').toLowerCase().includes(q)
+      );
+      if (results.length === 0) {
+        resultEl.innerHTML = `<div class="empty">未找到匹配的书籍。</div>`;
+      } else {
+        let html = `<div class="book-grid">`;
+        results.slice().reverse().forEach(note => {
+          const cats = LIB_CATS || [];
+          const catInfo = cats.find(c => c.key === (note.category || 'astrology')) || cats[0] || { color: '#2d5bd1', icon: '🔮', name: '占星' };
+          const status = note.readStatus || 'unread';
+          const statusText = status === 'read' ? '已读完' : status === 'reading' ? '在读' : '未读';
+          html += `
+            <div class="book-cover-card" onclick="openBookDetail('${note.id}')">
+              <div class="book-cover-img" style="background: linear-gradient(135deg, ${catInfo.color}, ${catInfo.color}88);">
+                <span style="font-size:36px;opacity:.5;">${catInfo.icon}</span>
+                <span class="book-cover-status ${status}">${statusText}</span>
+              </div>
+              <div class="book-cover-info">
+                <div class="book-cover-title">${escapeHtml(note.title || '未命名')}</div>
+                <div class="book-cover-meta">${note.author ? `<span>${escapeHtml(note.author)}</span>` : ''}</div>
+              </div>
+            </div>
+          `;
+        });
+        html += `</div>`;
+        resultEl.innerHTML = html;
+      }
     }
 
     function renderLibAddForm(cats) {
