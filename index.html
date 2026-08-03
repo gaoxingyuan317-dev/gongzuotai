@@ -5304,9 +5304,37 @@ ${bodyHtml}
       if (githubSyncing) { toast('正在同步中，请稍候...'); return; }
       githubSyncing = true;
       const statusEl = document.getElementById('gh-sync-status');
-      if (statusEl) statusEl.textContent = '⏳ 正在上传到 GitHub...';
+      if (statusEl) statusEl.textContent = '⏳ 正在同步到 GitHub...';
       const { username, repo, branch, token } = githubSyncConfig;
       try {
+        // 上传前先拉取云端数据，合并云端有但本地没有的数据，防止互相覆盖
+        var pullUrl = 'https://raw.githubusercontent.com/' + username + '/' + repo + '/' + branch + '/workbench_data.json';
+        try {
+          var pullResp = await fetch(pullUrl, { cache: 'no-store' });
+          if (pullResp.ok) {
+            var cloudData = await pullResp.json();
+            var mergeArrays = ['diaries','bookNotes','crucible','questions','daily','content','editing','viral','writing','brain','skills','library'];
+            var cloudAdded = 0;
+            mergeArrays.forEach(function(key) {
+              if (cloudData[key] && Array.isArray(cloudData[key])) {
+                var localIds = new Set((state[key] || []).map(function(item) { return item.id; }));
+                cloudData[key].forEach(function(item) {
+                  if (item.id && !localIds.has(item.id)) {
+                    state[key] = state[key] || [];
+                    state[key].push(item);
+                    cloudAdded++;
+                  }
+                });
+              }
+            });
+            if (cloudAdded > 0) {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+              renderNav();
+              console.log('上传前从云端合并了 ' + cloudAdded + ' 条数据');
+            }
+          }
+        } catch(pullErr) { console.log('上传前拉取跳过:', pullErr.message); }
+
         const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
         if (!githubFileSha) githubFileSha = await githubGetFileSha();
         const body = {
