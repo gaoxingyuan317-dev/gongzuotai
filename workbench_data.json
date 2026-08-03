@@ -533,13 +533,6 @@
       "content": "你好你好"
     },
     {
-      "id": "1785736702925ho61pzuuefi",
-      "date": "2026-08-03",
-      "time": "13:58",
-      "title": "你好你好",
-      "content": "哈哈哈哈"
-    },
-    {
       "id": "1785738542794k50804ze3dq",
       "date": "2026-08-03",
       "time": "14:29",
@@ -642,5 +635,7 @@
   "questions": [],
   "dataVersion": "2026-08-03-questions",
   "diaryListCollapsed": false,
-  "deletedIds": []
+  "deletedIds": [
+    "1785736702925ho61pzuuefi"
+  ]
 }
