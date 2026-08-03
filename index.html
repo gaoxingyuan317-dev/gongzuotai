@@ -5343,7 +5343,7 @@ ${bodyHtml}
           branch: branch
         };
         if (githubFileSha) body.sha = githubFileSha;
-        const resp = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/workbench_data.json`, {
+        var resp = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/workbench_data.json`, {
           method: 'PUT',
           headers: {
             'Authorization': 'token ' + token,
@@ -5352,6 +5352,22 @@ ${bodyHtml}
           },
           body: JSON.stringify(body)
         });
+        // 409 冲突或 422 SHA 不匹配：重新获取 SHA 后重试一次
+        if (resp.status === 409 || resp.status === 422) {
+          console.log('SHA 过期，重新获取后重试...');
+          githubFileSha = await githubGetFileSha();
+          if (githubFileSha) body.sha = githubFileSha;
+          else delete body.sha;
+          resp = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/workbench_data.json`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'token ' + token,
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+        }
         if (resp.ok) {
           const data = await resp.json();
           githubFileSha = data.content.sha;
