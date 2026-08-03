@@ -545,9 +545,16 @@
       "time": "14:29",
       "title": "你好不尴尬",
       "content": "虎伏伏伏"
+    },
+    {
+      "id": "1785741516225y54odej1fsc",
+      "date": "2026-08-03",
+      "time": "15:18",
+      "title": "",
+      "content": ""
     }
   ],
-  "selectedDiaryId": "1785738070111kkorhrspu5",
+  "selectedDiaryId": "1785741516225y54odej1fsc",
   "diary_chat": [],
   "bookNotes": [
     {
@@ -633,5 +640,6 @@
   "fileSyncConnected": false,
   "crucible": [],
   "questions": [],
-  "dataVersion": "2026-08-03-questions"
+  "dataVersion": "2026-08-03-questions",
+  "diaryListCollapsed": false
 }
