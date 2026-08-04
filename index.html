@@ -1105,16 +1105,10 @@
 
     <main class="main">
       <header class="header">
-        <h2 id="module-title">✅ 每日计划</h2>
+        <h2 id="module-title">📚 图书馆</h2>
         <div class="header-actions">
-          <button class="btn btn-secondary" onclick="switchModule('daily')">任务计划</button>
-          <button class="btn btn-secondary" onclick="switchModule('writing')">灵感知识库</button>
-          <button class="btn btn-secondary" onclick="switchModule('library')">选择合集</button>
           <button class="btn btn-secondary" onclick="openGithubSyncPanel()" id="github-sync-btn" style="background:#2d5bd1;color:#fff;">☁️云同步</button>
-          <button class="btn btn-secondary" onclick="switchModule('content')">搜索</button>
-          <button class="btn btn-secondary" onclick="smartClassify()">+ 新增</button>
-          <button class="btn btn-secondary" onclick="exportData()" style="background:#28a745;color:#fff;">📦 导出</button>
-          <button class="btn btn-secondary" onclick="importData()" style="background:#17a2b8;color:#fff;">📂 导入</button>
+          <button class="btn btn-secondary" onclick="openGlobalSearch()" style="background:#2d5bd1;color:#fff;font-size:16px;padding:5px 12px;" title="全局搜索">🔍</button>
         </div>
       </header>
       <div class="content" id="content-area"></div>
@@ -1245,7 +1239,7 @@
       ]
     };
     let state = loadState();
-    let activeModule = state.activeModule || "daily";
+    let activeModule = state.activeModule || "library";
     let writingSubTab = "inspiration";
 
     function loadState() {
@@ -1275,7 +1269,7 @@
           return mergeBuiltInKnowledge(parsed);
         } catch (e) {}
       }
-      const fresh = { modules: MODULE_ORDER.slice(), activeModule: "daily" };
+      const fresh = { modules: MODULE_ORDER.slice(), activeModule: "library" };
       Object.keys(moduleDefs).forEach(key => {
         fresh[key] = moduleDefs[key].defaultItems
           ? moduleDefs[key].defaultItems.map(text => createItem(text))
@@ -1396,7 +1390,7 @@
                   state = mergeBuiltInKnowledge(data.state);
                   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
                   renderNav();
-                  switchModule(state.activeModule || 'daily');
+                  switchModule(state.activeModule || 'library');
                   console.log('从 IndexedDB 全量备份恢复了数据');
                   resolve(1);
                   return;
@@ -5262,6 +5256,218 @@ ${bodyHtml}
       toast("已填入Skills PK记录模板");
     }
 
+    // ===== 全局搜索 =====
+    function openGlobalSearch() {
+      var existing = document.getElementById('global-search-overlay');
+      if (existing) existing.remove();
+      var overlay = document.createElement('div');
+      overlay.id = 'global-search-overlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:9999;display:flex;flex-direction:column;align-items:center;padding-top:60px;';
+      overlay.innerHTML = ''
+        + '<div style="background:#fff;border-radius:16px;width:92%;max-width:600px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.2);">'
+        + '  <div style="display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid #f0f0f0;">'
+        + '    <span style="font-size:20px;">🔍</span>'
+        + '    <input type="text" id="global-search-input" placeholder="搜索所有内容：书名、日记、灵感、笔记..." style="flex:1;border:none;outline:none;font-size:16px;color:#1d1d1f;background:transparent;" autofocus>'
+        + '    <button onclick="document.getElementById(\'global-search-overlay\').remove()" style="background:none;border:none;font-size:22px;color:#86868b;cursor:pointer;padding:4px 8px;">✕</button>'
+        + '  </div>'
+        + '  <div id="global-search-results" style="flex:1;overflow-y:auto;padding:8px 16px 16px;"></div>'
+        + '</div>';
+      document.body.appendChild(overlay);
+      overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+      var input = document.getElementById('global-search-input');
+      input.focus();
+      input.addEventListener('input', function() { doGlobalSearch(this.value); });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doGlobalSearch(this.value);
+        if (e.key === 'Escape') overlay.remove();
+      });
+      doGlobalSearch('');
+    }
+
+    function doGlobalSearch(query) {
+      var resultsEl = document.getElementById('global-search-results');
+      if (!resultsEl) return;
+      query = (query || '').trim().toLowerCase();
+      if (!query) {
+        resultsEl.innerHTML = '<div style="text-align:center;color:#86868b;padding:40px 20px;font-size:14px;line-height:1.8;">输入关键词搜索全部内容<br><span style="font-size:12px;color:#aeaeb2;">书籍 · 读书笔记 · 日记 · 灵感 · 爆款 · 技能 · 思想熔炉 · 问题库</span></div>';
+        return;
+      }
+      var results = [];
+      var highlight = function(text) {
+        if (!text) return '';
+        var escaped = escapeHtml(text);
+        var q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return escaped.replace(new RegExp(q, 'gi'), '<mark style="background:#ffe066;padding:0 2px;border-radius:2px;">$&</mark>');
+      };
+      var truncate = function(text, max) {
+        if (!text) return '';
+        if (text.length <= max) return text;
+        return text.slice(0, max) + '...';
+      };
+
+      // 搜索书籍读书笔记
+      (state.bookNotes || []).forEach(function(b) {
+        var titleMatch = (b.title || '').toLowerCase().includes(query);
+        var authorMatch = (b.author || '').toLowerCase().includes(query);
+        var noteMatch = (b.notes || b.note || '').toLowerCase().includes(query);
+        var descMatch = (b.desc || '').toLowerCase().includes(query);
+        if (titleMatch || authorMatch || noteMatch || descMatch) {
+          results.push({
+            type: '📚 书籍',
+            title: b.title || '未命名书籍',
+            preview: (b.author ? b.author + ' · ' : '') + truncate(b.notes || b.note || b.desc || '', 80),
+            match: highlight((b.title || '') + ' ' + (b.author || '') + ' ' + truncate(b.notes || b.note || b.desc || '', 100)),
+            action: "closeGlobalSearch(); switchModule('library');"
+          });
+        }
+      });
+      // 搜索图书馆卡片
+      (state.library || []).forEach(function(item) {
+        var textMatch = (item.text || '').toLowerCase().includes(query);
+        var titleMatch = (item.title || '').toLowerCase().includes(query);
+        if (textMatch || titleMatch) {
+          results.push({
+            type: '📚 图书馆',
+            title: item.title || truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight((item.title || '') + ' ' + truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('library');"
+          });
+        }
+      });
+      // 搜索日记
+      (state.diaries || []).forEach(function(d) {
+        var titleMatch = (d.title || '').toLowerCase().includes(query);
+        var contentMatch = (d.content || '').toLowerCase().includes(query);
+        if (titleMatch || contentMatch) {
+          results.push({
+            type: '📖 日记',
+            title: d.title || '未命名记录',
+            preview: truncate(d.content || '', 80),
+            match: highlight((d.title || '') + ' ' + truncate(d.content || '', 100)),
+            action: "closeGlobalSearch(); switchModule('writing'); selectDiary('" + d.id + "');"
+          });
+        }
+      });
+      // 搜索灵感知识库
+      (state.writing || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query) || (item.title || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '💡 灵感',
+            title: item.title || truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('writing');"
+          });
+        }
+      });
+      // 搜索内容灵感
+      (state.content || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '⛏️ 内容灵感',
+            title: truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('content');"
+          });
+        }
+      });
+      // 搜索爆款视频
+      (state.viral || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '🔥 爆款',
+            title: truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('viral');"
+          });
+        }
+      });
+      // 搜索视频剪辑
+      (state.editing || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '✂️ 剪辑',
+            title: truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('editing');"
+          });
+        }
+      });
+      // 搜索每日计划
+      (state.daily || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '✅ 任务',
+            title: truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('daily');"
+          });
+        }
+      });
+      // 搜索技能
+      (state.skills || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query) || (item.title || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '🛠️ 技能',
+            title: item.title || truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('skills');"
+          });
+        }
+      });
+      // 搜索思想熔炉
+      (state.crucible || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query) || (item.title || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '🔮 熔炉',
+            title: item.title || truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('library');"
+          });
+        }
+      });
+      // 搜索问题库
+      (state.questions || []).forEach(function(item) {
+        if ((item.text || '').toLowerCase().includes(query) || (item.title || '').toLowerCase().includes(query)) {
+          results.push({
+            type: '❓ 问题库',
+            title: item.title || truncate(item.text || '', 30),
+            preview: truncate(item.text || '', 80),
+            match: highlight(truncate(item.text || '', 100)),
+            action: "closeGlobalSearch(); switchModule('library');"
+          });
+        }
+      });
+
+      if (results.length === 0) {
+        resultsEl.innerHTML = '<div style="text-align:center;color:#86868b;padding:40px 20px;font-size:14px;">没有找到「' + escapeHtml(query) + '」相关内容</div>';
+        return;
+      }
+      var html = '<div style="font-size:12px;color:#86868b;padding:8px 0 12px;">找到 ' + results.length + ' 条结果</div>';
+      results.forEach(function(r) {
+        html += '<div onclick="' + r.action + '" style="padding:12px 14px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#f9f9f7;transition:background .12s;" onmouseover="this.style.background=\'#f0f0ee\'" onmouseout="this.style.background=\'#f9f9f7\'">'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+          + '<span style="font-size:11px;font-weight:700;color:#2d5bd1;background:rgba(45,91,209,.08);padding:2px 8px;border-radius:6px;">' + r.type + '</span>'
+          + '</div>'
+          + '<div style="font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:2px;">' + highlight(r.title) + '</div>'
+          + '<div style="font-size:12px;color:#86868b;line-height:1.5;">' + r.match + '</div>'
+          + '</div>';
+      });
+      resultsEl.innerHTML = html;
+    }
+
+    function closeGlobalSearch() {
+      var el = document.getElementById('global-search-overlay');
+      if (el) el.remove();
+    }
+
     function smartClassify() {
       const text = prompt("把要放进工作台的内容粘贴在这里，我会按8栏规则自动归类：");
       if (!text || !text.trim()) return;
@@ -5645,7 +5851,7 @@ ${bodyHtml}
           state = mergeBuiltInKnowledge(data);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
           renderNav();
-          switchModule(state.activeModule || 'daily');
+          switchModule(state.activeModule || 'library');
           if (statusEl) statusEl.textContent = '✅ 已用云端数据完全替换';
           toast('已从云端完全恢复所有数据');
         } else {
@@ -5835,7 +6041,7 @@ ${bodyHtml}
       }
       saveState();
       renderNav();
-      switchModule(state.activeModule || 'daily');
+      switchModule(state.activeModule || 'library');
       _pendingImportData = null;
       var ov = document.getElementById('import-confirm-overlay');
       if (ov) ov.remove();
@@ -5871,7 +6077,7 @@ ${bodyHtml}
 <script>
 // 版本检测：如果本地存储的版本号与当前不一致，强制刷新一次
 (function(){
-  var CURRENT_VERSION = '20260803_longpress_v2';
+  var CURRENT_VERSION = '20260804_library_search';
   try {
     var saved = localStorage.getItem('_page_version');
     if (saved && saved !== CURRENT_VERSION) {
