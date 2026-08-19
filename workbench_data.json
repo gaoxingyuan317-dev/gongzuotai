@@ -708,6 +708,23 @@
       "readStatus": "unread",
       "readPage": "",
       "created": "2026-08-03 09:20"
+    },
+    {
+      "id": "1787119093091m2414dzbtfr",
+      "title": "荣格自传：回忆·梦·思考",
+      "author": "卡尔·荣格",
+      "chapter": "",
+      "note": "",
+      "category": "growth",
+      "tags": [
+        {
+          "text": "🤖 AI推荐",
+          "type": "ai"
+        }
+      ],
+      "readStatus": "unread",
+      "readPage": "",
+      "created": "2026-08-19 13:58"
     }
   ],
   "fileSyncConnected": false,
